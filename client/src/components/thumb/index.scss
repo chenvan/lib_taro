@@ -1,0 +1,27 @@
+.thumb {
+  display: flex;
+  margin: 16px;
+  padding: 16px;
+  background-color: #FFFFFF;
+  border-radius: 16px;
+}
+
+.cover {
+  flex: 0 0 30%;
+}
+
+.cover_img {
+  width: 100%;
+}
+
+.info {
+  padding-left: 24px;
+}
+
+.title {
+  font-size: 32px;
+}
+
+.author, .book-type {
+  font-size: 28px;
+}
