@@ -23,7 +23,7 @@ export default class Thumb extends Component {
 
   render () {
     return (
-      <View class='thumb'>
+      <View class='thumb-root'>
         <View class='cover'>
           <Image 
             src={this.props.cover}

@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View } from '@tarojs/components'
+import { View, ScrollView } from '@tarojs/components'
 import './index.scss'
 
 import Search from '../../components/search/Search'
@@ -25,7 +25,12 @@ export default class Index extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      result: test
+      result: test,
+      hasMore: undefined,
+      isLoading: false,
+      pageIndex: 0,
+      searchField: '',
+      searchInfo: '',
     }
   }
 
@@ -39,36 +44,104 @@ export default class Index extends Component {
 
   componentDidHide () { }
 
-  onSuccess = res => {
-    console.log('page', res)
+
+  onError = err => {
     this.setState({
-      result: this.state.result.concat(res)
+      isLoading: false
+    })
+    console.log('page', err)
+  }
+
+  onSuccess = (data, isLoadMore) => {
+    this.setState({
+      result: isLoadMore ? this.state.result.concat(data) : data,
+      hasMore: data.length === 10,
+      pageIndex: isLoadMore ? this.state.pageIndex + 1 : 1,
+      isLoading: false,
     })
   }
 
-  onError = err => {
-    console.log('page', err)
+  onSearch = (field, info) => {
+    // console.log(field, info)
+    if (!this.state.isLoading) {
+      this.setState({
+        searchField: field,
+        searchInfo: info,
+        hasMore: undefined,
+        isLoading: true
+      })
+
+      this.search(field, info, 0)
+        .then(res => this.onSuccess(res.result.data, false))
+        .catch(err => this.onError(err))
+    }
+  }
+
+
+  search = (field, info, pageIndex) => {
+    return Taro.cloud.callFunction({
+      name: "book",
+      data: {
+        type: 'search',
+        data: {
+          searchField: field,
+          searchInfo: info,
+          pageIndex: pageIndex,
+        }
+      }
+    })
+  } 
+
+  onReachBottom = () => {
+    if (this.state.hasMore && !this.state.isLoading) {
+      this.setState({
+        isLoading: true
+      })
+
+      this.search(this.state.searchField, this.state.searchInfo, this.state.pageIndex)
+        .then(res => this.onSuccess(res.result.data, true))
+        .catch(err => this.onError(err))
+    } 
   }
 
   render () {
     return (
-      <View>
-        <Search 
-          onSuccess={this.onSuccess}
-          onError={this.onError}
-        />
+      <View class='root'>
+        <View class='header'>
+          <Search 
+            onSearch={this.onSearch}
+          />
+        </View>
+        <View 
+          class='main'
+        >
+          {
+            this.state.result.map(res => {
+              return (
+                <Thumb 
+                  cover={res.cover}
+                  title={res.title}
+                  author={res.author}
+                  bookType={res.book_type}
+                  key={res._id}
+                />
+              )
+            })
+          }
+        </View>
         {
-          this.state.result.map(res => {
-            return (
-              <Thumb 
-                cover={res.cover}
-                title={res.title}
-                author={res.author}
-                bookType={res.book_type}
-                key={res._id}
-              />
-            )
-          })
+          this.state.hasMore === false && (
+            <View>
+              全部加载完成
+            </View>
+          )
+        } 
+        {
+          this.state.isLoading && (
+            <View>
+              Loading
+            </View>
+          )
         }
       </View>
     )

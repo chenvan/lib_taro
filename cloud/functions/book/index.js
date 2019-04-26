@@ -8,6 +8,7 @@ const db = cloud.database()
 
 exports.main = async (event, context) => {
   const { data, type } = event
+  const limit = data.limit || 10
 
   if (type === 'search') {
     let query = data.searchInfo === '' ? (
@@ -21,8 +22,8 @@ exports.main = async (event, context) => {
       })
     )
     
-    return query.skip(data.skip)
-      .limit(data.limit)
+    return query.skip(data.pageIndex * limit)
+      .limit(limit)
       .get()
   }
 }

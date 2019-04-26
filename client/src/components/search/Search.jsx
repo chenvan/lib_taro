@@ -1,6 +1,8 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Input, Picker } from '@tarojs/components'
 
+import './index.scss'
+
 const searchFieldList = [
   {
     key: '书名',
@@ -9,6 +11,10 @@ const searchFieldList = [
   {
     key: '作者',
     value: 'author'
+  },
+  {
+    key: '分类',
+    value: 'book_type'
   },
 ]
 
@@ -38,24 +44,7 @@ export default class Search extends Component {
   }
 
   search = () => {
-    Taro.cloud.callFunction({
-      name: "book",
-      data: {
-        type: 'search',
-        data: {
-          searchField: this.state.searchField.value,
-          searchInfo: this.state.searchInfo,
-          skip: 0,
-          limit: 10
-        }
-      }
-    })
-    .then(res => {
-      this.props.onSuccess && this.props.onSuccess(res.result.data)
-    })
-    .catch(err => {
-      this.props.onError && this.props.onError(err)
-    })
+    this.props.onSearch && this.props.onSearch(this.state.searchField.value, this.state.searchInfo)
   }
 
   catchInput = event => {
@@ -66,23 +55,26 @@ export default class Search extends Component {
 
   render () {
     return (
-      <View>
-        <Picker
-          mode='selector'
-          onChange={this.selectSearchField}
-          range={searchFieldList}
-          rangeKey='key'
-        >
-          <View>
-            {this.state.searchField.key}
-          </View>
-        </Picker>
-        <Input 
-          value={this.state.searchInfo}
-          confirmType='search'
-          onInput={this.catchInput}
-          onConfirm={this.search}
-        />
+      <View class='search-root'>
+        <View class='search-box'>
+          <Picker
+            mode='selector'
+            onChange={this.selectSearchField}
+            range={searchFieldList}
+            rangeKey='key'
+            class='search-field-selector'
+          >
+            <View>
+              {this.state.searchField.key}
+            </View>
+          </Picker>
+          <Input 
+            value={this.state.searchInfo}
+            confirmType='search'
+            onInput={this.catchInput}
+            onConfirm={this.search}
+          />
+        </View>
       </View>
     )
   }
