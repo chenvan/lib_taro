@@ -29,6 +29,7 @@ export default class Thumb extends Component {
             src={this.props.cover}
             mode='widthFix'
             class='cover_img'
+            lazy-load
           />
         </View>
         <View class='info'>

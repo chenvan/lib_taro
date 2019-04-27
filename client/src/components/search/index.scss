@@ -3,16 +3,27 @@
   padding: 16px 0;
   
   .search-box {
-    background-color: #F8F8F8;
+    background-color: #F4F4F4;
     display: flex;
     margin: 0 16px;
-    padding: 8px;
-    border-radius: 24px;
+    // padding: 8px;
+    border-radius: 32px;
     align-items: flex-end;
     font-size: 36px;
+    overflow: hidden;
 
     .search-field-selector {
-      padding: 0 16px;
+      padding: 8px 16px;
+      // background-color: orange;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 8px 16px;
+    }
+
+    .search-icon {
+      padding: 12px 16px;
     }
     
   }

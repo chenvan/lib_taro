@@ -1,0 +1,62 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+  background-color: white;
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 48px;
+  letter-spacing: 4px;
+  margin: 8px 0;
+}
+
+.info {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.cover {
+  flex: 2;
+}
+
+.others {
+  padding-left: 16px;
+  flex: 3;
+  font-size: 25px;
+
+  .item {
+    margin-bottom: 8px;
+  }
+}
+
+.img {
+   width: 100%;
+}
+
+.action {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.button {
+  margin-right: 16px;
+  font-size: 28px;
+  padding: 8px 16px;
+  border: 2px solid orange;
+  border-radius: 8px;
+}
+
+.summary {
+  font-size: 25px;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+
+.qrcode {
+  // display: none;
+  margin: 16px auto;
+  height: 150PX;
+  width: 150PX;
+}

@@ -1,6 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
 // import Index from './pages/index'
-import Search from './pages/search'
+// import Search from './pages/search'
+import Book from './pages/book'
 
 import './app.scss'
 
@@ -16,8 +17,8 @@ class App extends Component {
     pages: [
       // 'pages/index/index',
       // 'pages/login/index',
-      'pages/search/index',
-      // 'pages/book/index',
+      // 'pages/search/index',
+      'pages/book/index',
       // 'pages/fav/index',
     ],
     window: {
@@ -46,7 +47,8 @@ class App extends Component {
   render () {
     return (
       // <Index />
-      <Search />
+      // <Search />
+      <Book />
     )
   }
 }

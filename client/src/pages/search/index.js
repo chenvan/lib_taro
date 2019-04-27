@@ -1,10 +1,9 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, ScrollView } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import './index.scss'
 
 import Search from '../../components/search/Search'
 import Thumb from '../../components/thumb/Thumb'
-
 
 const test = [
   {
@@ -27,7 +26,6 @@ export default class Index extends Component {
     this.state = {
       result: test,
       hasMore: undefined,
-      isLoading: false,
       pageIndex: 0,
       searchField: '',
       searchInfo: '',
@@ -46,10 +44,8 @@ export default class Index extends Component {
 
 
   onError = err => {
-    this.setState({
-      isLoading: false
-    })
     console.log('page', err)
+    Taro.hideLoading()
   }
 
   onSuccess = (data, isLoadMore) => {
@@ -57,28 +53,28 @@ export default class Index extends Component {
       result: isLoadMore ? this.state.result.concat(data) : data,
       hasMore: data.length === 10,
       pageIndex: isLoadMore ? this.state.pageIndex + 1 : 1,
-      isLoading: false,
     })
+    Taro.hideLoading()
   }
 
   onSearch = (field, info) => {
     // console.log(field, info)
-    if (!this.state.isLoading) {
-      this.setState({
-        searchField: field,
-        searchInfo: info,
-        hasMore: undefined,
-        isLoading: true
-      })
+    this.setState({
+      searchField: field,
+      searchInfo: info,
+      hasMore: undefined,
+    })
 
-      this.search(field, info, 0)
-        .then(res => this.onSuccess(res.result.data, false))
-        .catch(err => this.onError(err))
-    }
+    this.search(field, info, 0)
+      .then(res => this.onSuccess(res.result.data, false))
+      .catch(err => this.onError(err))
   }
 
-
   search = (field, info, pageIndex) => {
+    Taro.showLoading({
+      title: '加载中...',
+      mask: true
+    })
     return Taro.cloud.callFunction({
       name: "book",
       data: {
@@ -93,11 +89,7 @@ export default class Index extends Component {
   } 
 
   onReachBottom = () => {
-    if (this.state.hasMore && !this.state.isLoading) {
-      this.setState({
-        isLoading: true
-      })
-
+    if (this.state.hasMore) {
       this.search(this.state.searchField, this.state.searchInfo, this.state.pageIndex)
         .then(res => this.onSuccess(res.result.data, true))
         .catch(err => this.onError(err))
@@ -112,9 +104,7 @@ export default class Index extends Component {
             onSearch={this.onSearch}
           />
         </View>
-        <View 
-          class='main'
-        >
+        <View class='main'>
           {
             this.state.result.map(res => {
               return (
@@ -131,18 +121,11 @@ export default class Index extends Component {
         </View>
         {
           this.state.hasMore === false && (
-            <View>
-              全部加载完成
+            <View class='footer'>
+              NO MORE
             </View>
           )
         } 
-        {
-          this.state.isLoading && (
-            <View>
-              Loading
-            </View>
-          )
-        }
       </View>
     )
   }

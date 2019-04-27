@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Input, Picker } from '@tarojs/components'
+import { View, Input, Picker, Icon } from '@tarojs/components'
 
 import './index.scss'
 
@@ -73,6 +73,14 @@ export default class Search extends Component {
             confirmType='search'
             onInput={this.catchInput}
             onConfirm={this.search}
+            class='search-input'
+          />
+          <Icon 
+            type='search'
+            size='20'
+            class='search-icon'
+            // color='oragne'
+            onClick={this.search}
           />
         </View>
       </View>

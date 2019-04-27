@@ -25,5 +25,7 @@ exports.main = async (event, context) => {
     return query.skip(data.pageIndex * limit)
       .limit(limit)
       .get()
+  } else if (type === 'get') {
+    return db.collection('book').doc(data.getId).get()
   }
 }
