@@ -21,9 +21,16 @@ export default class Thumb extends Component {
 
   componentDidHide () { }
 
+  onClick = () => {
+    this.props.onClick && this.props.onClick()
+  }
+
   render () {
     return (
-      <View class='thumb-root'>
+      <View
+        class='thumb-root'
+        onClick={this.onClick}
+      >
         <View class='cover'>
           <Image 
             src={this.props.cover}

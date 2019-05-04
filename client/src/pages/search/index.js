@@ -5,15 +5,15 @@ import './index.scss'
 import Search from '../../components/search/Search'
 import Thumb from '../../components/thumb/Thumb'
 
-const test = [
-  {
-    author: "青山裕企",
-    book_type: "写真",
-    cover: "https://img1.doubanio.com/view/subject/s/public/s4669517.jpg",
-    title:  "スクールガール・コンプレックス",
-    _id: "5cbab6c81515aaa537454518",
-  }
-]
+// const test = [
+//   {
+//     author: "青山裕企",
+//     book_type: "写真",
+//     cover: "https://img1.doubanio.com/view/subject/s/public/s4669517.jpg",
+//     title:  "スクールガール・コンプレックス",
+//     _id: "5cc15d291515aaa537798df8",
+//   }
+// ]
 
 export default class Index extends Component {
 
@@ -24,7 +24,7 @@ export default class Index extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      result: test,
+      result: [],
       hasMore: undefined,
       pageIndex: 0,
       searchField: '',
@@ -96,6 +96,12 @@ export default class Index extends Component {
     } 
   }
 
+  onClick = _id => {
+    Taro.navigateTo({
+      url: `../book/index?_id=${_id}`
+    })
+  }
+
   render () {
     return (
       <View class='root'>
@@ -114,6 +120,7 @@ export default class Index extends Component {
                   author={res.author}
                   bookType={res.book_type}
                   key={res._id}
+                  onClick={this.onClick.bind(this, res._id)}
                 />
               )
             })

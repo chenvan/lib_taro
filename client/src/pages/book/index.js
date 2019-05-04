@@ -99,14 +99,17 @@ export default class Index extends Component {
     Taro.hideLoading()
 
     if (from === 'book') {
+      console.log(err)
       this.setState({
         status: 'error'
       })
     } else if (from === 'fav') {
       let { errMsg } = err
-      
+
       if (errMsg.includes('_fav_ dup key')) {
         errMsg = '已经收藏'
+      } else if (errMsg.includes('超过收藏数')) {
+        errMsg = '超过收藏数'
       }
 
       Taro.showModal({
