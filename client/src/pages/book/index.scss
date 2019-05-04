@@ -1,9 +1,12 @@
 .root {
   display: flex;
   flex-direction: column;
-  padding: 0 16px;
   background-color: white;
   min-height: 100vh;
+}
+
+.book-root {
+  padding: 0 16px;
 }
 
 .title {
@@ -54,9 +57,29 @@
   margin-bottom: 16px;
 }
 
+.modal-root {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba($color: #000000, $alpha: 0.3);
+}
+
+.qrcode-root {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 80px 80px 20px 80px;
+  background-color: white;
+}
+
 .qrcode {
-  // display: none;
-  margin: 16px auto;
   height: 150PX;
   width: 150PX;
+  margin-bottom: 40px;
+}
+
+.hide-button {
+  margin: auto;
+  width: fit-content;
 }

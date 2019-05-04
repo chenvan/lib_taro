@@ -2,8 +2,6 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, Button } from '@tarojs/components'
 import './index.scss'
 
-// import Login from '../../components/login/index'
-
 export default class Index extends Component {
 
   config = {
@@ -12,7 +10,13 @@ export default class Index extends Component {
 
   componentWillMount () { }
 
-  componentDidMount () { }
+  componentDidMount () { 
+    // page for dev
+    // let devUrl = '../book/index'
+    // Taro.redirectTo({
+    //   url: devUrl
+    // })
+  }
 
   componentWillUnmount () { }
 
@@ -28,13 +32,27 @@ export default class Index extends Component {
 
   render () {
     return (
-      <View>
-        <Button onClick={this.navigateTo.bind(this, '../search/index')} >
-          Search
-        </Button>
-        <Button onClick={this.navigateTo.bind(this, '../login/index')} >
-          Login
-        </Button>
+      <View class='root'>
+        <View class='header'>
+          <View>头像</View>
+          <View class='action-zone'>
+            <View>
+              收藏
+            </View>
+            <View onClick={this.navigateTo.bind(this, '../search/index')} >
+              搜索
+            </View>
+            <View>
+              退出登录
+            </View>
+            <View>
+              更改密码
+            </View>
+          </View>
+        </View>
+        <View class='borrowing'>
+
+        </View>
       </View>
     )
   }

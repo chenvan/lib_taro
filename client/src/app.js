@@ -1,7 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-// import Index from './pages/index'
-// import Search from './pages/search'
-import Book from './pages/book'
+import Index from './pages/index'
 
 import './app.scss'
 
@@ -15,11 +13,11 @@ class App extends Component {
 
   config = {
     pages: [
-      // 'pages/index/index',
-      // 'pages/login/index',
-      // 'pages/search/index',
+      'pages/index/index',
+      'pages/login/index',
+      'pages/search/index',
       'pages/book/index',
-      // 'pages/fav/index',
+      'pages/fav/index',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -46,9 +44,7 @@ class App extends Component {
   // 请勿修改此函数
   render () {
     return (
-      // <Index />
-      // <Search />
-      <Book />
+      <Index />
     )
   }
 }
