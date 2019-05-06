@@ -42,7 +42,7 @@ export default class Thumb extends Component {
         <View class='info'>
           <View class='title'>{this.props.title}</View>
           <View class='author'>{this.props.author}</View>
-          <View class='book-type'>{this.props.bookType}</View>
+          { this.props.bookType && <View class='book-type'>{this.props.bookType}</View> }
           { this.props.returnDate && <View>{this.props.returnDate}</View> }
         </View>
       </View>

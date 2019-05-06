@@ -24,13 +24,18 @@ exports.main = async (event, context) => {
             bid: data.bid,
             title: data.title,
             cover: data.cover,
+            author: data.author,
             createTime: db.serverDate(),
           }
         })
       })
   } else if (type === 'remove') {
-
+    return db.collection('fav').doc(data._id),remove()
   } else if (type === 'get') {
-
+    return db.collection('fav').where({
+      uid: data.uid
+    })
+      .orderBy('createTime', 'desc')
+      .get()
   }
 }

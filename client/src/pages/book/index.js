@@ -106,6 +106,7 @@ export default class Index extends Component {
     } else if (from === 'fav') {
       let { errMsg } = err
 
+      // other method ??
       if (errMsg.includes('_fav_ dup key')) {
         errMsg = '已经收藏'
       } else if (errMsg.includes('超过收藏数')) {
@@ -158,65 +159,61 @@ export default class Index extends Component {
 
   render () {
     return (
-      <View>
-        {
-          this.state.status !== 'loading' && (
-            this.state.status === 'success' ? (
-              <View class='root'>
-                <View class='book-root'>
-                  <View class='title'>
-                    {this.state.title}
-                  </View>
-                  <View class='info'>
-                    <View class='cover'>
-                      <Image 
-                        src={this.state.cover}
-                        mode='widthFix'
-                        class='img'
-                      />
-                    </View>
-                    <View class='others'>
-                      <View class='item'>{'作者: ' + this.state.author}</View>
-                      {this.state.master !== '' && <View class='item'>{'书主: ' + this.state.master}</View>}
-                      <View class='item'>{'类型: ' + this.state.book_type}</View>
-                      <View class='item'>{'ISBN: ' + this.state.isbn}</View>
-                      <View class='item'>{'总数: ' + this.state.total_num}</View>
-                      <View class='item'>{'可借: ' + this.state.can_borrow_num}</View>
-                    </View>
-                  </View>
-                  <View class='action'>
-                    <View class='button' onClick={this.addToFav}>收藏</View>
-                    <View class='button' onClick={this.showQrcode}>二维码</View>
-                  </View>
-                  <View class='summary'>
-                    <View>内容简介</View>
-                    <View>{this.state.summary}</View>
-                  </View>
+      this.state.status !== 'loading' && (
+        this.state.status === 'success' ? (
+          <View class='root'>
+            <View class='book-root'>
+              <View class='title'>
+                {this.state.title}
+              </View>
+              <View class='info'>
+                <View class='cover'>
+                  <Image 
+                    src={this.state.cover}
+                    mode='widthFix'
+                    class='img'
+                  />
                 </View>
-                <View 
-                  class='modal-root'
-                  style={`display: ${this.state.showState}`} 
-                >
-                  <View class='qrcode-root'>
-                    <Canvas class='qrcode' canvasId='qrcode' />
-                    <View class='hide-button'>
-                      <Icon 
-                        onClick={this.hideQrcode} 
-                        type='clear'
-                        size='36'
-                      />
-                    </View>
-                  </View>
+                <View class='others'>
+                  <View class='item'>{'作者: ' + this.state.author}</View>
+                  {this.state.master !== '' && <View class='item'>{'书主: ' + this.state.master}</View>}
+                  <View class='item'>{'类型: ' + this.state.book_type}</View>
+                  <View class='item'>{'ISBN: ' + this.state.isbn}</View>
+                  <View class='item'>{'总数: ' + this.state.total_num}</View>
+                  <View class='item'>{'可借: ' + this.state.can_borrow_num}</View>
                 </View>
               </View>
-            ) : (
-              <View>
-                Error
+              <View class='action'>
+                <View class='button' onClick={this.addToFav}>收藏</View>
+                <View class='button' onClick={this.showQrcode}>二维码</View>
               </View>
-            )
-          )
-        }
-      </View>
+              <View class='summary'>
+                <View>内容简介</View>
+                <View>{this.state.summary}</View>
+              </View>
+            </View>
+            <View 
+              class='modal-root'
+              style={`display: ${this.state.showState}`} 
+            >
+              <View class='qrcode-root'>
+                <Canvas class='qrcode' canvasId='qrcode' />
+                <View class='hide-button'>
+                  <Icon 
+                    onClick={this.hideQrcode} 
+                    type='clear'
+                    size='36'
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        ) : (
+          <View>
+            Error
+          </View>
+        )
+      )
     )
   }
 }

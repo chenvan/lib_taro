@@ -1,0 +1,23 @@
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 32px;
+  align-items: center;
+  background-color: white;
+}
+
+.avatar {
+  width: 20%;
+}
+
+.action-zone {
+  margin: 40px 0 16px;
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+}

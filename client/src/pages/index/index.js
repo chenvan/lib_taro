@@ -2,6 +2,8 @@ import Taro, { Component } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import './index.scss'
 
+import Avatar from '../../components/avatar/Avatar'
+
 export default class Index extends Component {
 
   config = {
@@ -12,10 +14,10 @@ export default class Index extends Component {
 
   componentDidMount () { 
     // page for dev
-    // let devUrl = '../book/index'
-    // Taro.redirectTo({
-    //   url: devUrl
-    // })
+    let devUrl = '../fav/index'
+    Taro.navigateTo({
+      url: devUrl
+    })
   }
 
   componentWillUnmount () { }
@@ -34,9 +36,11 @@ export default class Index extends Component {
     return (
       <View class='root'>
         <View class='header'>
-          <View>头像</View>
+          <View class='avatar'>
+            <Avatar />
+          </View>
           <View class='action-zone'>
-            <View>
+            <View onClick={this.navigateTo.bind(this, '../fav/index')}>
               收藏
             </View>
             <View onClick={this.navigateTo.bind(this, '../search/index')} >

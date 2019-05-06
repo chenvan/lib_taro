@@ -22,7 +22,7 @@
 ### title
 ### cover
 ### author
-### add_date
+### createTime
 
 ## fav
 ### uid
@@ -30,4 +30,4 @@
 ### title
 ### cover
 ### author
-### add_time
+### createTime
