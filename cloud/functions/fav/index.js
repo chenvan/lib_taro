@@ -30,7 +30,7 @@ exports.main = async (event, context) => {
         })
       })
   } else if (type === 'remove') {
-    return db.collection('fav').doc(data._id),remove()
+    return db.collection('fav').doc(data._id).remove()
   } else if (type === 'get') {
     return db.collection('fav').where({
       uid: data.uid

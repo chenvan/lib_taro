@@ -13,20 +13,28 @@
     width: 100%;
   }
   
-  .info {
+  .other {
     padding-left: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .info {
+    flex: 1;
   }
   
   .title {
     font-size: 32px;
   }
   
-  .author {
+  .author, .book-type {
     font-size: 28px;
   }
 
-  .book-type {
+  .del-button {
     font-size: 28px;
+    opacity: 0.8;
+    letter-spacing: 6px;
   }
 }
 

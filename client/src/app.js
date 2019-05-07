@@ -1,5 +1,8 @@
 import Taro, { Component } from '@tarojs/taro'
+import { Provider } from '@tarojs/mobx'
 import Index from './pages/index'
+
+import user from './store/user'
 
 import './app.scss'
 
@@ -8,6 +11,10 @@ import './app.scss'
 // if (process.env.NODE_ENV !== 'production' && process.env.TARO_ENV === 'h5')  {
 //   require('nerv-devtools')
 // }
+
+const store = {
+  user
+}
 
 class App extends Component {
 
@@ -44,7 +51,9 @@ class App extends Component {
   // 请勿修改此函数
   render () {
     return (
-      <Index />
+      <Provider store={store}>
+        <Index />
+      </Provider>
     )
   }
 }

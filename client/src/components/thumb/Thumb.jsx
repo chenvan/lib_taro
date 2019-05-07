@@ -25,6 +25,21 @@ export default class Thumb extends Component {
     this.props.onClick && this.props.onClick()
   }
 
+  onDelete = e => {
+    e.stopPropagation()
+
+    if (this.props.onDelete) {
+      Taro.showModal({
+        title: this.props.title,
+        content: '确认删除?'
+      }).then(res => {
+        if (res.confirm) {
+          this.props.onDelete()
+        }
+      })
+    }
+  }
+
   render () {
     return (
       <View
@@ -39,11 +54,23 @@ export default class Thumb extends Component {
             lazy-load
           />
         </View>
-        <View class='info'>
-          <View class='title'>{this.props.title}</View>
-          <View class='author'>{this.props.author}</View>
-          { this.props.bookType && <View class='book-type'>{this.props.bookType}</View> }
-          { this.props.returnDate && <View>{this.props.returnDate}</View> }
+        <View class='other'>
+          <View class='info'>
+            <View class='title'>{this.props.title}</View>
+            <View class='author'>{this.props.author}</View>
+            { this.props.bookType && <View class='book-type'>{this.props.bookType}</View> }
+            { this.props.returnDate && <View>{this.props.returnDate}</View> }
+          </View>
+          { 
+            this.props.hasDeleteAction && (
+              <View 
+                onClick={this.onDelete}
+                class='del-button'
+              >
+                删除
+              </View>
+            ) 
+          }
         </View>
       </View>
     )

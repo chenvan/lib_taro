@@ -34,7 +34,7 @@ export default class Index extends Component {
         }
       }
     }).then(res => {
-      this.onSuccess(res.result.data)
+      this.onSuccess(res.result.data, true)
     })
   }
 
@@ -44,15 +44,23 @@ export default class Index extends Component {
 
   componentDidHide () { }
 
-  onSuccess = data => {
+  onSuccess = (data, isInit) => {
     Taro.hideLoading()
-    this.setState({
-      status: 'success',
-      result: data
-    })
+    if (isInit) {
+      this.setState({
+        status: 'success',
+        result: data
+      })
+    } else {
+      this.setState({
+        result: data
+      })
+    }
+    
   }
 
   onError = err => {
+    Taro.hideLoading()
     console.log(err)
   }
 
@@ -63,7 +71,26 @@ export default class Index extends Component {
   }
 
   onDelete = _id => {
-    console.log(_id)
+    Taro.showLoading({
+      title: '加载中...'
+    })
+
+    Taro.cloud.callFunction({
+      name: "fav",
+      data: {
+        type: 'remove',
+        data: {
+          _id
+        }
+      }
+    }).then(res => {
+      console.log(res)
+      if (res.result.stats.removed === 1) {
+        this.onSuccess(this.state.result.filter(item => item._id !== _id))
+      }
+    }).catch(err => {
+      this.onError(err)
+    })
   }
 
   render () {
@@ -80,7 +107,9 @@ export default class Index extends Component {
                     author={res.author}
                     bookType={res.book_type}
                     key={res._id}
+                    hasDeleteAction
                     onClick={this.onClick.bind(this, res.bid)}
+                    onDelete={this.onDelete.bind(this, res._id)}
                   />
                 )
               })
