@@ -5,14 +5,7 @@ import './index.scss'
 import logoSrc from '../../assert/logo.png'
 
 export default class Avatar extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      isAdmin: false,
-      name: '陈旺',
-    }
-  }
-
+  
   componentWillMount () { }
 
   componentDidMount () { 
@@ -30,7 +23,7 @@ export default class Avatar extends Component {
       <View class='avatar-root'>
         <View class='avatar-img'>
           {
-            this.state.isAdmin ? (
+            this.props.isAdmin ? (
               <Image 
                 src={logoSrc}
                 mode='widthFix'
@@ -43,7 +36,7 @@ export default class Avatar extends Component {
             )
           }
         </View>
-        <View class='username'>{this.state.name}</View>
+        <View class='username'>{this.props.name}</View>
       </View>
     )
   }

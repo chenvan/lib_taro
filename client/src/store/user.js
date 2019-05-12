@@ -5,7 +5,7 @@ const user = observable({
   _id: Taro.getStorageSync('_id'),
   name: Taro.getStorageSync('name'),
   isAdmin: Taro.getStorageSync('isAdmin'),
-  loginDate: Taro.getStorageSync('loginDate'), //需要用 new Date 变回 Date Object 吗?
+  loginDate: Taro.getStorageSync('loginDate'), 
   set(data) {
     Object.keys(data).forEach(key => {
       this[key] = data[key]
@@ -13,13 +13,17 @@ const user = observable({
     })
   },
   clearAll() {
-    Object.keys(this).forEach(key => this[key] = undefined)
+    ['_id', 'name', 'isAdmin', 'loginDate'].forEach(key => this[key] = undefined)
     Taro.clearStorageSync()
   },
   isLoginDateOutdated() {
-    let currentDate = new Date()
-    console.log(currentDate)
-    console.log(this.loginDate)
+    if (this.loginDate) {
+      const MAX = 1000 * 60 * 60
+      let currentDate = new Date()
+      
+      return currentDate - this.loginDate > MAX
+    }
+    return true
   }
 })
 

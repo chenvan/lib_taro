@@ -1,9 +1,12 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View } from '@tarojs/components'
+import { observer, inject } from '@tarojs/mobx'
 import './index.scss'
 
 import Thumb from '../../components/thumb/Thumb'
 
+@inject('user')
+@observer
 export default class Index extends Component {
 
   config = {
@@ -30,7 +33,7 @@ export default class Index extends Component {
       data: {
         type: 'get',
         data: {
-          uid: '001960'
+          uid: this.props.user._id
         }
       }
     }).then(res => {

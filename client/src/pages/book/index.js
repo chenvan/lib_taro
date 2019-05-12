@@ -1,8 +1,11 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Canvas, Icon } from '@tarojs/components'
+import { observer, inject } from '@tarojs/mobx'
 import drawQrcode from 'weapp-qrcode'
 import './index.scss'
 
+@inject('user')
+@observer
 export default class Index extends Component {
 
   config = {
@@ -85,7 +88,7 @@ export default class Index extends Component {
         canvasId: 'qrcode',
         text: JSON.stringify({
           bid: this.state.bid,
-          uid: '001960'
+          uid: this.props.user._id
         })
       })
     } else if (from === 'fav') {
@@ -143,7 +146,7 @@ export default class Index extends Component {
       data: {
         type: 'add',
         data: {
-          uid: '001960',
+          uid: this.props.user._id,
           bid: this.state.bid,
           title: this.state.title,
           author: this.state.author,

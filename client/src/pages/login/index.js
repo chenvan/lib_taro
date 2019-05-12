@@ -47,7 +47,7 @@ export default class Index extends Component {
     let isChangePWD = this.$router.params.isChangePWD,
         type = isChangePWD ? 'changePWD' : 'login',
         data = isChangePWD ? {
-            _id: '001960',
+            _id: this.props.user._id,
             pwd: rawData.pwd.trim(),
             newPWD: rawData.newPWD.trim()
           } : {
@@ -149,6 +149,7 @@ export default class Index extends Component {
               name='_id'
               placeholder='工号'
               class='input'
+              value={this.props.user._id || ''}
             />
           }
           <Input 
