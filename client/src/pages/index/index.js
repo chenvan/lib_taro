@@ -14,7 +14,7 @@ export default class Index extends Component {
 
   componentDidMount () { 
     // page for dev
-    let devUrl = '../fav/index'
+    let devUrl = '../login/index'
     Taro.navigateTo({
       url: devUrl
     })
@@ -49,7 +49,7 @@ export default class Index extends Component {
             <View>
               退出登录
             </View>
-            <View>
+            <View onClick={this.navigateTo.bind(this, '../login/index?isChangePWD=true')}>
               更改密码
             </View>
           </View>

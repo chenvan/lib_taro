@@ -1,0 +1,30 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: white;
+
+  .logo {
+    margin: 64px 0;
+    width: 20%;
+
+    .logo-img {
+      width: 100%;
+    }
+  }
+
+  Form {
+    width: 60%;
+  }
+
+  Input {
+    margin-bottom: 40px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid rgba($color: #000000, $alpha: 0.5);
+  }
+
+  Button {
+    margin-top: 80px;
+  }
+}

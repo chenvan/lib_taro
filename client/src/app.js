@@ -1,7 +1,8 @@
 import Taro, { Component } from '@tarojs/taro'
 import { Provider } from '@tarojs/mobx'
-import Index from './pages/index'
+import '@tarojs/async-await'
 
+import Index from './pages/index'
 import user from './store/user'
 
 import './app.scss'
