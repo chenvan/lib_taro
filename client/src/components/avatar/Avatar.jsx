@@ -20,7 +20,7 @@ export default class Avatar extends Component {
 
   render () {
     return (
-      <View class='avatar-root'>
+      <View class={this.props.class}>
         <View class='avatar-img'>
           {
             this.props.isAdmin ? (

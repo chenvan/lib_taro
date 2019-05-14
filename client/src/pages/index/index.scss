@@ -3,21 +3,31 @@
   flex-direction: column;
 }
 
-.header {
+
+.header, .action-zone, .scan {
   display: flex;
   flex-direction: column;
-  padding-bottom: 32px;
-  align-items: center;
   background-color: white;
+}
+
+.action-zone, .scan, .borrowing {
+  margin-top: 64px;
+  padding: 0 36px;
+}
+
+.header {
+  padding: 16px 0 40px;
+  align-items: center;
 }
 
 .avatar {
   width: 20%;
 }
 
-.action-zone {
-  margin: 40px 0 16px;
-  display: flex;
-  width: 100%;
-  justify-content: space-around;
+.action-button, .scan-borrow, .scan-return {
+  padding: 24px 0;
+}
+
+.action-button:not(:first-child), .scan-return {
+  border-top: 1px solid rgba($color: black, $alpha: 0.1);
 }
