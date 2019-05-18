@@ -59,7 +59,7 @@ export default class Thumb extends Component {
             <View class='title'>{this.props.title}</View>
             <View class='author'>{this.props.author}</View>
             { this.props.bookType && <View class='book-type'>{this.props.bookType}</View> }
-            { this.props.returnDate && <View>{this.props.returnDate}</View> }
+            { this.props.returnDate && <View class='return-date'>{this.props.returnDate}</View> }
           </View>
           { 
             this.props.hasDeleteAction && (

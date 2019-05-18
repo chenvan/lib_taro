@@ -4,15 +4,24 @@
 }
 
 
-.header, .action-zone, .scan {
+.header, .action-zone, .scan, .borrowing {
   display: flex;
   flex-direction: column;
   background-color: white;
 }
 
 .action-zone, .scan, .borrowing {
-  margin-top: 64px;
+  margin-top: 48px;
+}
+
+.action-zone, .scan {
   padding: 0 36px;
+}
+
+.borrowing {
+  // align-items: center;
+  // margin: auto;
+  padding-bottom: 36px
 }
 
 .header {
