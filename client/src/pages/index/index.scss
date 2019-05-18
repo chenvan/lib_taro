@@ -20,12 +20,16 @@
   align-items: center;
 }
 
-.avatar {
+.user-info {
   width: 20%;
 }
 
-.action-button, .scan-borrow, .scan-return {
+.action-button {
   padding: 24px 0;
+}
+
+.scan-borrow, .scan-return {
+  padding: 40px 0;
 }
 
 .action-button:not(:first-child), .scan-return {

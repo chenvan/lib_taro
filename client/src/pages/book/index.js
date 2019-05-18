@@ -88,7 +88,10 @@ export default class Index extends Component {
         canvasId: 'qrcode',
         text: JSON.stringify({
           bid: this.state.bid,
-          uid: this.props.user._id
+          uid: this.props.user._id,
+          // title,
+          // author,
+          // cover
         })
       })
     } else if (from === 'fav') {

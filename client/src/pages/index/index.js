@@ -4,6 +4,7 @@ import { observer, inject } from '@tarojs/mobx'
 import './index.scss'
 
 import Avatar from '../../components/avatar/Avatar'
+import BorrowingBoard from '../../components/borrowingBoard/BorrowingBoard'
 
 @inject('user')
 @observer
@@ -15,7 +16,6 @@ export default class Index extends Component {
 
   constructor (props) {
     super(props)
-
     this.actionList = this.props.user.isAdmin ? ['逾期名单', '退出登录', '更改密码'] : ['收藏', '搜索', '退出登录', '更改密码'] 
   }
   
@@ -34,6 +34,7 @@ export default class Index extends Component {
     // Taro.navigateTo({
     //   url: devUrl
     // })
+
   }
 
   componentWillUnmount () { }
@@ -66,19 +67,44 @@ export default class Index extends Component {
     })
   }
 
-  scanToBorrow = () => {
+
+  scan = action => {
+    let type = action === 'borrow' ? 'add' : 'del'
+
     Taro.scanCode({
       onlyFromCamera: true,
       scanType: 'qrcode'
     }).then(res => {
-      console.log(res)
+      Taro.showLoading({
+        title: '加载中...'
+      })
+
+      return Taro.cloud.callFunction({
+        name: 'borrowing',
+        data: {
+          type,
+          data: JSON.parse(res.result)
+        }
+      })
+    }).then(res => {
+      
+      let title = res.result.msg ? '告知' : '成功'
+      let content = res.result.msg || ( type === 'add' ? '借阅成功' : '还书成功' )
+      Taro.hideLoading()
+      Taro.showModal({
+        title,
+        content,
+      })
     }).catch(err => {
-      console.log(err)
+      Taro.hideLoading()
+      if (err.errMsg !== 'scanCode:fail cancel') {
+        let content = err.errMsg || err.message
+        Taro.showModal({
+          title: '出错',
+          content,
+        })
+      }
     })
-  }
-
-  scanToReturn = () => {
-
   }
 
   render () {
@@ -86,7 +112,8 @@ export default class Index extends Component {
       <View class='root'>
         <View class='header'>
           <Avatar
-            class='avatar'
+            // eslint-disable-next-line taro/props-reserve-keyword
+            class='user-info'
             name={this.props.user.name}
             isAdmin={this.props.user.isAdmin}
           />
@@ -107,17 +134,20 @@ export default class Index extends Component {
             <View class='scan'>
               <View 
                 class='scan-borrow'
-                onClick={this.scanToBorrow}
+                onClick={this.scan.bind(this, 'borrow')}
               >
                 借书扫码
               </View>
-              <View class='scan-return'>
+              <View 
+                class='scan-return'
+                onClick={this.scan.bind(this, 'return')}
+              >
                 还书扫码
               </View>
             </View>
           ) : (
             <View class='borrowing'>
-              Borrowing
+              <BorrowingBoard uid={this.props.user._id} />
             </View>
           )
         }
