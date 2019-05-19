@@ -53,7 +53,7 @@ export default class Index extends Component {
     let list = {
       '收藏': this.navigateTo.bind(this, '../fav/index'),
       '搜索': this.navigateTo.bind(this, '../search/index'),
-      '逾期名单': () => {console.log('逾期名单')},
+      '逾期名单': this.navigateTo.bind(this, '../outdated/index'),
       '退出登录': this.logout,
       '更改密码': this.navigateTo.bind(this, '../login/index?isChangePWD=true')
     }

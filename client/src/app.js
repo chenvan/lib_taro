@@ -26,6 +26,7 @@ class App extends Component {
       'pages/search/index',
       'pages/book/index',
       'pages/fav/index',
+      'pages/outdated/index'
     ],
     window: {
       backgroundTextStyle: 'light',

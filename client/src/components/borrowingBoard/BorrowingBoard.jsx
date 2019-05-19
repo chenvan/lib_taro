@@ -5,7 +5,6 @@ import Thumb from '../thumb/Thumb'
 
 import './index.scss'
 
-
 export default class BorrowingBoard extends Component {
 
   constructor (props) {
@@ -20,6 +19,30 @@ export default class BorrowingBoard extends Component {
   componentWillMount () { }
 
   componentDidMount () { 
+    this.getBorrowingInfo()
+  }
+
+  componentWillUnmount () { }
+
+  componentDidShow () { }
+
+  componentDidHide () { }
+
+  onClick = _id => {
+    Taro.navigateTo({
+      url: `../../pages/book/index?_id=${_id}`
+    })
+  }
+
+  refresh = () => {
+    this.setState({
+      status: 'loading',
+      bookInfo: {}
+    })
+    this.getBorrowingInfo()
+  }
+
+  getBorrowingInfo = () => {
     Taro.cloud.callFunction({
       name: 'borrowing',
       data: {
@@ -37,7 +60,6 @@ export default class BorrowingBoard extends Component {
           bookInfo: res.result.data
         })
       }
-      // console.log(res)
     }).catch(err => {
       this.setState({
         status: 'error'
@@ -46,24 +68,16 @@ export default class BorrowingBoard extends Component {
     })
   }
 
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
-
-  onClick = _id => {
-    Taro.navigateTo({
-      url: `../../pages/book/index?_id=${_id}`
-    })
-  }
-
   render () {
     return (
       <View class={this.props.class}>
         {
           this.state.status === 'loading' ? (
-             <View>加载中...</View>
+              <View
+                class='borrowing-board-loading'
+              >
+                加载中...
+              </View>
           ) : (
             this.state.status === 'success' ? (
               this.state.bookInfo.title ? (
@@ -75,14 +89,23 @@ export default class BorrowingBoard extends Component {
                   onClick={this.onClick.bind(this, this.state.bookInfo.bid)}
                 />
               ) : (
-                <View>还没借书, 赶紧去借吧</View>
+                <View
+                  class='no-borrowing'
+                >
+                  还没借书, 赶紧去借吧
+                </View>
               )
             ) : (
               <View>Error</View>
             )
           )
         }
-        <View>刷新</View>
+        <View
+          class='borrowing-board-refresh'
+          onClick={this.refresh}
+        >
+          刷新
+        </View>
       </View>
     )
   }
