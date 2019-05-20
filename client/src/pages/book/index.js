@@ -89,9 +89,7 @@ export default class Index extends Component {
         text: JSON.stringify({
           bid: this.state.bid,
           uid: this.props.user._id,
-          // title,
-          // author,
-          // cover
+          name: this.props.user.name,
         })
       })
     } else if (from === 'fav') {

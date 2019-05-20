@@ -14,14 +14,19 @@ export default class Index extends Component {
       result: [],
       hasMore: undefined,
       pageIndex: 0,
-      searchField: '',
-      searchInfo: '',
     }
   }
 
   componentWillMount () { }
 
-  componentDidMount () { }
+  componentDidMount () { 
+    this.getOutdated(this.state.pageIndex)
+      .then(res => {
+        console.log(res)
+        this.onSuccess(res.result.data)
+      })
+      .catch(err => this.onError(err))
+  }
 
   componentWillUnmount () { }
 
@@ -39,37 +44,23 @@ export default class Index extends Component {
     this.setState({
       result: isLoadMore ? this.state.result.concat(data) : data,
       hasMore: data.length === 10,
-      pageIndex: isLoadMore ? this.state.pageIndex + 1 : 1,
+      pageIndex: this.state.pageIndex + 1,
     })
     Taro.hideLoading()
   }
 
-  onSearch = (field, info) => {
-    // console.log(field, info)
-    this.setState({
-      searchField: field,
-      searchInfo: info,
-      hasMore: undefined,
-    })
 
-    this.search(field, info, 0)
-      .then(res => this.onSuccess(res.result.data, false))
-      .catch(err => this.onError(err))
-  }
-
-  search = (field, info, pageIndex) => {
+  getOutdated = pageIndex => {
     Taro.showLoading({
       title: '加载中...',
       mask: true
     })
     return Taro.cloud.callFunction({
-      name: "book",
+      name: "borrowing",
       data: {
-        type: 'search',
+        type: 'outdated',
         data: {
-          searchField: field,
-          searchInfo: info,
-          pageIndex: pageIndex,
+          pageIndex
         }
       }
     })
@@ -77,7 +68,7 @@ export default class Index extends Component {
 
   onReachBottom = () => {
     if (this.state.hasMore) {
-      this.search(this.state.searchField, this.state.searchInfo, this.state.pageIndex)
+      this.getOutdated(this.state.pageIndex)
         .then(res => this.onSuccess(res.result.data, true))
         .catch(err => this.onError(err))
     } 
@@ -87,12 +78,18 @@ export default class Index extends Component {
   render () {
     return (
       <View class='root'>
-        
         <View class='main'>
           {
-            this.state.result.map(res => {
+            this.state.result.map(record => {
               return (
-                <View>{res}</View>
+                <View
+                  class='outdated-record'
+                  key={record._id}
+                >
+                  <View class='title'>{record.title}</View>
+                  <View class='name'>{record.name}</View>
+                  <View class='date'>{record.returnDate.slice(0, 10)}</View>
+                </View>
               )
             })
           }

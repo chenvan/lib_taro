@@ -20,7 +20,7 @@ function getBookInfo (bid) {
     })
 }
 
-function borrowBook (uid, bid, title, author, cover) {
+function borrowBook (uid, bid, name, title, author, cover) {
   return db.collection('borrowing').add(
     {
       data: {
@@ -29,6 +29,7 @@ function borrowBook (uid, bid, title, author, cover) {
           offset: 60 * 60 * 1000 * 24 * 7
         }),
         bid,
+        name,
         title,
         author,
         cover
@@ -93,6 +94,17 @@ function returnBook (uid, bid) {
     })
 }
 
+function getOutdated (pageIndex, limit = 20) {
+  return db.collection('borrowing')
+    .where({
+      returnDate: _.lt(db.serverDate())
+    })
+    .skip(pageIndex * limit)
+    .limit(limit)
+    .orderBy('returnDate', 'asc')
+    .get()
+}
+
 // 云函数入口函数
 exports.main = async (event, context) => {
   const { type, data } = event
@@ -100,7 +112,7 @@ exports.main = async (event, context) => {
   if (type === 'add') {
     return getBookInfo(data.bid).then(([isCanBorrow, bookInfo]) => {
       if (isCanBorrow) {
-        return borrowBook(data.uid, data.bid, bookInfo.title, bookInfo.author, bookInfo.cover)
+        return borrowBook(data.uid, data.bid, data.name, bookInfo.title, bookInfo.author, bookInfo.cover)
       } else {
         return {
           msg: `${bookInfo.title}已经借完`
@@ -112,5 +124,7 @@ exports.main = async (event, context) => {
     return returnBook(data.uid, data.bid)
   } else if (type === 'get') {
     return getBorrowingBook(data.uid)
+  } else if (type === 'outdated') {
+    return getOutdated(data.pageIndex, data.limit)
   }
 }

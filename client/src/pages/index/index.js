@@ -30,10 +30,10 @@ export default class Index extends Component {
 
   componentDidMount () { 
     // page for dev
-    // let devUrl = '../login/index'
-    // Taro.navigateTo({
-    //   url: devUrl
-    // })
+    let devUrl = '../outdated/index'
+    Taro.navigateTo({
+      url: devUrl
+    })
 
   }
 
@@ -118,17 +118,6 @@ export default class Index extends Component {
             isAdmin={this.props.user.isAdmin}
           />
         </View>
-        <View class='action-zone'>
-          {
-            this.actionList.map(actionName => {
-              return (
-                <View class='action-button' key={actionName} onClick={this.actionFunc.bind(this, actionName)}>
-                  {actionName}
-                </View>
-              )
-            })
-          }
-        </View>
         {
           this.props.user.isAdmin ? (
             <View class='scan'>
@@ -151,6 +140,17 @@ export default class Index extends Component {
             </View>
           )
         }
+        <View class='action-zone'>
+          {
+            this.actionList.map(actionName => {
+              return (
+                <View class='action-button' key={actionName} onClick={this.actionFunc.bind(this, actionName)}>
+                  {actionName}
+                </View>
+              )
+            })
+          }
+        </View>
       </View>
     )
   }

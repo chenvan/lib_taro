@@ -1,0 +1,20 @@
+page {
+  min-height: 100vh;
+}
+
+.outdated-record {
+  background-color: white;
+  margin: 16px;
+  padding: 24px;
+}
+
+.name, .date {
+  font-size: 30px;
+}
+
+.footer {
+  width: fit-content;
+  margin: 16px auto;
+  font-size: 24px;
+  letter-spacing: 4px;
+}
