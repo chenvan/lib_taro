@@ -1,7 +1,11 @@
+/* eslint-disable taro/props-reserve-keyword */
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Canvas, Icon } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import drawQrcode from 'weapp-qrcode'
+
+import CustomButton from '../../components/button/Button'
+
 import './index.scss'
 
 @inject('user')
@@ -188,8 +192,8 @@ export default class Index extends Component {
                 </View>
               </View>
               <View class='action'>
-                <View class='button' onClick={this.addToFav}>收藏</View>
-                <View class='button' onClick={this.showQrcode}>二维码</View>
+                <CustomButton class='button' onClick={this.addToFav}>收藏</CustomButton>
+                <CustomButton class='button' onClick={this.showQrcode}>二维码</CustomButton>
               </View>
               <View class='summary'>
                 <View>内容简介</View>

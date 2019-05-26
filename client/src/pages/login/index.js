@@ -99,7 +99,7 @@ export default class Index extends Component {
       }
     } catch (err) {
       Taro.hideLoading()
-      console.log(err)
+      // console.log(err)
       this.onError(err)
     }
   }
@@ -173,10 +173,15 @@ export default class Index extends Component {
               </View>
             )
           }
-          <View>
+          <View class='button-zone'>
             <Button formType='submit'>
               {isChangePWD ? '修改密码' : '登录'}
             </Button>
+            { 
+              // !isChangePWD && (
+              //   <Button>游客</Button>
+              // )
+            }
           </View>
         </Form>
       </View>

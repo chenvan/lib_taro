@@ -1,10 +1,19 @@
+/* eslint-disable taro/props-reserve-keyword */
 import Taro, { Component } from '@tarojs/taro'
-import { View } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import './index.scss'
 
-import Avatar from '../../components/avatar/Avatar'
+import Header from '../../components/header/Header'
 import BorrowingBoard from '../../components/borrowingBoard/BorrowingBoard'
+import CustomButton from '../../components/button/Button'
+
+import keySrc from '../../assert/_ionicons_svg_md-key.svg'
+import logoutSrc from '../../assert/_ionicons_svg_md-log-out.svg'
+import heartSrc from '../../assert/_ionicons_svg_md-heart-empty.svg'
+import searchSrc from '../../assert/_ionicons_svg_md-search.svg'
+import scanSrc from '../../assert/_ionicons_svg_md-qr-scanner.svg'
+import calendarSrc from '../../assert/_ionicons_svg_md-calendar.svg'
 
 @inject('user')
 @observer
@@ -17,6 +26,20 @@ export default class Index extends Component {
   constructor (props) {
     super(props)
     this.actionList = this.props.user.isAdmin ? ['逾期名单', '退出登录', '更改密码'] : ['收藏', '搜索', '退出登录', '更改密码'] 
+    this.actionIcon = {
+      '逾期名单': calendarSrc,
+      '退出登录': logoutSrc,
+      '更改密码': keySrc,
+      '收藏': heartSrc,
+      '搜索': searchSrc,
+      '借书扫码': scanSrc,
+      '还书扫码': scanSrc
+    }
+    
+    this.state = {
+      borrwoingComponentStatus: 'loading',
+      borrowingBookInfo: {}
+    }
   }
   
   
@@ -30,11 +53,11 @@ export default class Index extends Component {
 
   componentDidMount () { 
     // page for dev
-    let devUrl = '../outdated/index'
-    Taro.navigateTo({
-      url: devUrl
-    })
-
+    // let devUrl = '../outdated/index'
+    // Taro.navigateTo({
+    //   url: devUrl
+    // })
+    this.getBorrowingInfo()
   }
 
   componentWillUnmount () { }
@@ -107,36 +130,75 @@ export default class Index extends Component {
     })
   }
 
+  refresh = () => {
+    this.setState({
+      borrwoingComponentStatus: 'loading',
+      borrowingBookInfo: {}
+    })
+    this.getBorrowingInfo()
+  }
+
+  getBorrowingInfo = () => {
+    Taro.cloud.callFunction({
+      name: 'borrowing',
+      data: {
+        type: 'get',
+        data: {
+          uid: this.props.user._id
+        }
+      }
+    }).then(res => {
+      this.setState({
+        borrwoingComponentStatus: 'success',
+      })
+      if (!res.result.msg) {
+        this.setState({
+          borrowingBookInfo: res.result.data
+        })
+      }
+    }).catch(err => {
+      this.setState({
+        borrwoingComponentStatus: 'error'
+      })
+      // how to handle err
+      console.log(err)
+    })
+  }
+
   render () {
     return (
       <View class='root'>
-        <View class='header'>
-          <Avatar
-            // eslint-disable-next-line taro/props-reserve-keyword
-            class='user-info'
-            name={this.props.user.name}
-            isAdmin={this.props.user.isAdmin}
-          />
-        </View>
+        <Header 
+          class='header'
+          name={this.props.user.name}
+          isAdmin={this.props.user.isAdmin}
+          _id={this.props.user._id}
+          onRefresh={this.refresh}
+        />
         {
           this.props.user.isAdmin ? (
             <View class='scan'>
-              <View 
-                class='scan-borrow'
+              <CustomButton
                 onClick={this.scan.bind(this, 'borrow')}
+                src={this.actionIcon['借书扫码']}
+                class='scan-borrow'
               >
-                借书扫码
-              </View>
-              <View 
-                class='scan-return'
+                <Text>借书扫码</Text>
+              </CustomButton>
+              <CustomButton
                 onClick={this.scan.bind(this, 'return')}
+                src={this.actionIcon['还书扫码']}
+                class='scan-return'
               >
-                还书扫码
-              </View>
+                <Text>还书扫码</Text>
+              </CustomButton>
             </View>
           ) : (
             <View class='borrowing'>
-              <BorrowingBoard uid={this.props.user._id} />
+              <BorrowingBoard 
+                status={this.state.borrwoingComponentStatus}
+                bookInfo={this.state.borrowingBookInfo}
+              />
             </View>
           )
         }
@@ -144,9 +206,14 @@ export default class Index extends Component {
           {
             this.actionList.map(actionName => {
               return (
-                <View class='action-button' key={actionName} onClick={this.actionFunc.bind(this, actionName)}>
-                  {actionName}
-                </View>
+                <CustomButton
+                  key={actionName}
+                  onClick={this.actionFunc.bind(this, actionName)}
+                  src={this.actionIcon[actionName]}
+                  class='action-button'
+                >
+                  <Text >{actionName}</Text>
+                </CustomButton>
               )
             })
           }

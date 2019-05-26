@@ -4,7 +4,7 @@
 }
 
 
-.header, .action-zone, .scan, .borrowing {
+.action-zone, .scan, .borrowing {
   display: flex;
   flex-direction: column;
   background-color: white;
@@ -18,17 +18,10 @@
   padding: 0 36px;
 }
 
-.borrowing {
-  padding-bottom: 12px;
-}
-
 .header {
-  padding: 16px 0 40px;
-  align-items: center;
-}
-
-.user-info {
-  width: 20%;
+  padding: 24px 0 16px 36px;
+  // align-items: center;
+  background-color: white;
 }
 
 .action-button {
@@ -42,3 +35,4 @@
 .action-button:not(:first-child), .scan-return {
   border-top: 1px solid rgba($color: black, $alpha: 0.1);
 }
+
