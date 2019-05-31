@@ -2,12 +2,16 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, OpenData } from '@tarojs/components'
 
-import CustomButton from '../button/Button'
+// import CustomButton from '../button/Button'
 
 import './index.scss'
 import logoSrc from '../../assert/logo.png'
 
 export default class Header extends Component {
+
+  static options = {
+    addGlobalClass: true
+  }
   
   componentWillMount () { }
 
@@ -21,13 +25,14 @@ export default class Header extends Component {
 
   componentDidHide () { }
 
-  refresh = () => {
-    this.props.onRefresh && this.props.onRefresh()
-  }
+  // refresh = () => {
+  //   this.props.onRefresh && this.props.onRefresh()
+  // }
 
   render () {
+
     return (
-      <View class={`header-root, ${this.props.class}`}>
+      <View class='header-root header'>
         <View class='avatar'>
           {
             this.props.isAdmin ? (
@@ -47,18 +52,7 @@ export default class Header extends Component {
           <View class='username'>{this.props.name}</View>
           <View class='id'>{this.props._id}</View>
         </View>
-        {
-          !this.props.isAdmin && (
-            <View class='header-button-zone'>
-              <CustomButton
-                class='refresh-button'
-                onClick={this.refresh}
-              >
-                刷新
-              </CustomButton>
-            </View>
-          )
-        }
+        {this.props.children}
       </View>
     )
   }

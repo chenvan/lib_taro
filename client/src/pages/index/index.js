@@ -35,10 +35,16 @@ export default class Index extends Component {
       '借书扫码': scanSrc,
       '还书扫码': scanSrc
     }
+
+    this.disabledAction = ['更改密码', '收藏']
     
     this.state = {
-      borrwoingComponentStatus: 'loading',
-      borrowingBookInfo: {}
+      borrowingStatus: 'loading',
+      borrowingTitle: undefined,
+      borrowingAuthor: undefined,
+      borrowingBid: undefined,
+      borrowingCover: undefined,
+      borrowingReturnDate: undefined
     }
   }
   
@@ -132,8 +138,12 @@ export default class Index extends Component {
 
   refresh = () => {
     this.setState({
-      borrwoingComponentStatus: 'loading',
-      borrowingBookInfo: {}
+      borrowingStatus: 'loading',
+      borrowingTitle: undefined,
+      borrowingAuthor: undefined,
+      borrowingBid: undefined,
+      borrowingCover: undefined,
+      borrowingReturnDate: undefined
     })
     this.getBorrowingInfo()
   }
@@ -148,19 +158,23 @@ export default class Index extends Component {
         }
       }
     }).then(res => {
-      this.setState({
-        borrwoingComponentStatus: 'success',
-      })
+      let bookInfo = {}
       if (!res.result.msg) {
-        this.setState({
-          borrowingBookInfo: res.result.data
-        })
+        bookInfo = res.result.data
       }
+      console.log(bookInfo)
+      this.setState({
+        borrowingStatus: 'success',
+        borrowingTitle: bookInfo.title,
+        borrowingAuthor: bookInfo.author,
+        borrowingBid: bookInfo.bid,
+        borrowingCover: bookInfo.cover,
+        borrowingReturnDate: bookInfo.returnDate
+      })
     }).catch(err => {
       this.setState({
-        borrwoingComponentStatus: 'error'
+        borrowingStatus: 'error'
       })
-      // how to handle err
       console.log(err)
     })
   }
@@ -173,31 +187,44 @@ export default class Index extends Component {
           name={this.props.user.name}
           isAdmin={this.props.user.isAdmin}
           _id={this.props.user._id}
-          onRefresh={this.refresh}
-        />
+        >
+          {
+            !this.props.user.isAdmin && (
+              <CustomButton
+                class='custom-button'
+                onClick={this.refresh}
+                disabled={this.props.user.isVisitor}
+              >
+                刷新
+              </CustomButton>
+            )
+          }
+        </Header>
         {
           this.props.user.isAdmin ? (
             <View class='scan'>
               <CustomButton
                 onClick={this.scan.bind(this, 'borrow')}
                 src={this.actionIcon['借书扫码']}
-                class='scan-borrow'
               >
-                <Text>借书扫码</Text>
+                <Text class='scan-borrow'>借书扫码</Text>
               </CustomButton>
               <CustomButton
                 onClick={this.scan.bind(this, 'return')}
                 src={this.actionIcon['还书扫码']}
-                class='scan-return'
               >
-                <Text>还书扫码</Text>
+                <Text class='scan-return'>还书扫码</Text>
               </CustomButton>
             </View>
           ) : (
             <View class='borrowing'>
               <BorrowingBoard 
-                status={this.state.borrwoingComponentStatus}
-                bookInfo={this.state.borrowingBookInfo}
+                status={this.state.borrowingStatus}
+                title={this.state.borrowingTitle}
+                author={this.state.borrowingAuthor}
+                cover={this.state.borrowingCover}
+                bid={this.state.borrowingBid}
+                returnDate={this.state.borrowingReturnDate}
               />
             </View>
           )
@@ -211,8 +238,9 @@ export default class Index extends Component {
                   onClick={this.actionFunc.bind(this, actionName)}
                   src={this.actionIcon[actionName]}
                   class='action-button'
+                  disabled={this.props.user.isVisitor && this.disabledAction.includes(actionName)}
                 >
-                  <Text >{actionName}</Text>
+                  <Text class='action-name'>{actionName}</Text>
                 </CustomButton>
               )
             })

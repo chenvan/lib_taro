@@ -9,18 +9,11 @@ export default class BorrowingBoard extends Component {
 
   constructor (props) {
     super(props)
-
-    // this.state = {
-    //   status: 'loading',
-    //   bookInfo: {},
-    // }
   }
 
   componentWillMount () { }
 
-  componentDidMount () { 
-    // this.getBorrowingInfo()
-  }
+  componentDidMount () { }
 
   componentWillUnmount () { }
 
@@ -34,59 +27,26 @@ export default class BorrowingBoard extends Component {
     })
   }
 
-  // refresh = () => {
-  //   this.setState({
-  //     status: 'loading',
-  //     bookInfo: {}
-  //   })
-  //   this.getBorrowingInfo()
-  // }
-
-  // getBorrowingInfo = () => {
-  //   Taro.cloud.callFunction({
-  //     name: 'borrowing',
-  //     data: {
-  //       type: 'get',
-  //       data: {
-  //         uid: this.props.uid
-  //       }
-  //     }
-  //   }).then(res => {
-  //     this.setState({
-  //       status: 'success',
-  //     })
-  //     if (!res.result.msg) {
-  //       this.setState({
-  //         bookInfo: res.result.data
-  //       })
-  //     }
-  //   }).catch(err => {
-  //     this.setState({
-  //       status: 'error'
-  //     })
-  //     console.log(err)
-  //   })
-  // }
-
   render () {
+    const { status, title, author, cover, returnDate, bid } = this.props
     return (
       <View class={this.props.class}>
         {
-          this.props.status === 'loading' ? (
+          status === 'loading' ? (
               <View
                 class='borrowing-board-loading'
               >
                 加载中...
               </View>
           ) : (
-            this.props.status === 'success' ? (
-              this.props.bookInfo.title ? (
+            status === 'success' ? (
+              title ? (
                 <Thumb 
-                  cover={this.props.bookInfo.cover}
-                  title={this.props.bookInfo.title}
-                  author={this.props.bookInfo.author}
-                  returnDate={this.props.bookInfo.returnDate.slice(0, 10)}
-                  onClick={this.onClick.bind(this, this.props.bookInfo.bid)}
+                  cover={cover}
+                  title={title}
+                  author={author}
+                  returnDate={returnDate.slice(0, 10)}
+                  onClick={this.onClick.bind(this, bid)}
                 />
               ) : (
                 <View

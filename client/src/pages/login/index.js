@@ -89,6 +89,7 @@ export default class Index extends Component {
           user.set({
             '_id': event.detail.value._id.trim(),
             'name': res.result.name,
+            'isVisitor': false,
             'isAdmin': event.detail.value._id.trim() === 'admin',
             'loginDate': new Date()
           })
@@ -102,6 +103,19 @@ export default class Index extends Component {
       // console.log(err)
       this.onError(err)
     }
+  }
+
+  loginAsVisitor = () => {
+    this.props.user.set({
+      '_id': '',
+      'name': '游客',
+      'isVisitor': true,
+      'isAdmin': false,
+      'loginDate': new Date()
+    })
+    Taro.redirectTo({
+      url: '../index/index'
+    })
   }
 
   onError = err => {
@@ -178,9 +192,13 @@ export default class Index extends Component {
               {isChangePWD ? '修改密码' : '登录'}
             </Button>
             { 
-              // !isChangePWD && (
-              //   <Button>游客</Button>
-              // )
+              !isChangePWD && (
+                <Button 
+                  onClick={this.loginAsVisitor}
+                >
+                  游客
+                </Button>
+              )
             }
           </View>
         </Form>

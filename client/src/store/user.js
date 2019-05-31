@@ -6,6 +6,7 @@ const user = observable({
   name: Taro.getStorageSync('name'),
   isAdmin: Taro.getStorageSync('isAdmin'),
   loginDate: Taro.getStorageSync('loginDate'), 
+  isVisitor: Taro.getStorageSync('isVisitor'),
   set(data) {
     Object.keys(data).forEach(key => {
       this[key] = data[key]
@@ -13,7 +14,8 @@ const user = observable({
     })
   },
   clearAll() {
-    ['_id', 'name', 'isAdmin', 'loginDate'].forEach(key => this[key] = undefined)
+    
+    ['_id', 'name', 'isAdmin', 'loginDate', 'isVisitor'].forEach(key => this[key] = undefined)
     Taro.clearStorageSync()
   },
   isLoginDateOutdated() {

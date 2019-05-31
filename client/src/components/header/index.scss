@@ -1,41 +1,27 @@
 .header-root {
   display: flex;
+
+  .avatar {
+    width: 20%;
+  }
+  
+  .logo {
+    width: 100%;
+  }
+  
+  .user-info {
+    margin-left: 24px;
+  }
+  
+  .username {
+    font-size: 36px;
+    letter-spacing: 6px;
+  }
+  
+  .id {
+    font-size: 28px;
+    margin-top: 8px;
+    color: rgba($color: #000000, $alpha: 0.6)
+  }
 }
 
-.avatar {
-  width: 20%;
-}
-
-.logo {
-  width: 100%;
-}
-
-.user-info {
-  margin-left: 24px;
-}
-
-.username {
-  // width: fit-content;
-  font-size: 36px;
-  letter-spacing: 6px;
-}
-
-.id {
-  font-size: 28px;
-  margin-top: 8px;
-  color: rgba($color: #000000, $alpha: 0.6)
-}
-
-.header-button-zone {
-  flex: 1;
-  margin-right: 36px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-}
-
-.refresh-button {
-  padding: 8px 16px;
-  font-size: 28px;
-  border: 1px solid black;
-}

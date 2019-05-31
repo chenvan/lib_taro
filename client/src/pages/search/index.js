@@ -105,11 +105,9 @@ export default class Index extends Component {
   render () {
     return (
       <View class='root'>
-        <View class='header'>
-          <Search 
-            onSearch={this.onSearch}
-          />
-        </View>
+        <Search 
+          onSearch={this.onSearch}
+        />
         <View class='main'>
           {
             this.state.result.map(res => {

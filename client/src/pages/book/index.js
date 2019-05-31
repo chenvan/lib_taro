@@ -192,8 +192,20 @@ export default class Index extends Component {
                 </View>
               </View>
               <View class='action'>
-                <CustomButton class='button' onClick={this.addToFav}>收藏</CustomButton>
-                <CustomButton class='button' onClick={this.showQrcode}>二维码</CustomButton>
+                <CustomButton 
+                  class='custom-button' 
+                  onClick={this.addToFav}
+                  disabled={this.props.user.isVisitor}
+                >
+                  收藏
+                </CustomButton>
+                <CustomButton 
+                  class='custom-button' 
+                  onClick={this.showQrcode}
+                  disabled={this.props.user.isVisitor}
+                >
+                  二维码
+                </CustomButton>
               </View>
               <View class='summary'>
                 <View>内容简介</View>

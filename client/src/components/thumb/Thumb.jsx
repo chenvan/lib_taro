@@ -3,13 +3,8 @@ import { View, Image } from '@tarojs/components'
 
 import './index.scss'
 
-
 export default class Thumb extends Component {
-  // constructor (props) {
-  //   super(props)
-  //   this.state = {
-  //   }
-  // }
+  
 
   componentWillMount () { }
 

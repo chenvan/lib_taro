@@ -4,15 +4,20 @@ import { View, Image } from '@tarojs/components'
 import './index.scss'
 
 export default class CustomButton extends Component {
+  static options = {
+    addGlobalClass: true
+  }
 
   onClick = () => {
-    this.props.onClick && this.props.onClick()
+    if (!this.props.disabled) {
+      this.props.onClick && this.props.onClick()
+    }
   }
 
   render () {
     return (
       <View 
-        class={`button-root, ${this.props.class}`}
+        class={`button-root ${this.props.disabled ? 'button-root-disabled,' : ''} custom-button`}
         onClick={this.onClick}
       >
         { 
@@ -21,6 +26,7 @@ export default class CustomButton extends Component {
               class='button-icon'
               mode='widthFix'
               src={this.props.src}
+              style={`width: ${this.props.iconWidth || '24px'}`}
             />
           )
         }

@@ -1,38 +1,52 @@
 .root {
   display: flex;
   flex-direction: column;
+
+  .action-zone, .scan, .borrowing {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+  }
+  
+  .action-zone, .scan, .borrowing {
+    margin-top: 48px;
+  }
+  
+  .action-zone, .scan {
+    padding: 0 36px;
+  }
+  
+  .header {
+    padding: 24px 0 16px 36px;
+    background-color: white;
+
+    .custom-button {
+      position: absolute;
+      right: 36px;
+      padding: 8px 16px;
+      font-size: 28px;
+      border: 1px solid black;
+    }
+  }
+  
+  .action-name {
+    padding: 24px 0;
+  }
+  
+  .scan-borrow, .scan-return {
+    padding: 40px 0;
+  }
+  
+  .action-name, .scan-borrow, .scan-return {
+    letter-spacing: 8px;
+    flex: 1;
+  }
+  
+  .action-button:not(:first-child) .action-name, .scan-return {
+    border-top: 1px solid rgba($color: black, $alpha: 0.1); 
+  }
 }
 
 
-.action-zone, .scan, .borrowing {
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-}
 
-.action-zone, .scan, .borrowing {
-  margin-top: 48px;
-}
-
-.action-zone, .scan {
-  padding: 0 36px;
-}
-
-.header {
-  padding: 24px 0 16px 36px;
-  // align-items: center;
-  background-color: white;
-}
-
-.action-button {
-  padding: 24px 0;
-}
-
-.scan-borrow, .scan-return {
-  padding: 40px 0;
-}
-
-.action-button:not(:first-child), .scan-return {
-  border-top: 1px solid rgba($color: black, $alpha: 0.1);
-}
 
