@@ -4,6 +4,7 @@ import { observer, inject } from '@tarojs/mobx'
 import './index.scss'
 
 import Thumb from '../../components/thumb/Thumb'
+import CustomButton from '../../components/button/Button'
 
 @inject('user')
 @observer
@@ -73,26 +74,34 @@ export default class Index extends Component {
     })
   }
 
-  onDelete = _id => {
-    Taro.showLoading({
-      title: '加载中...'
-    })
-
-    Taro.cloud.callFunction({
-      name: "fav",
-      data: {
-        type: 'remove',
-        data: {
-          _id
-        }
-      }
+  onDelete = (_id, title) => {
+  
+    Taro.showModal({
+      title: title,
+      content: '确认删除?'
     }).then(res => {
-      console.log(res)
-      if (res.result.stats.removed === 1) {
-        this.onSuccess(this.state.result.filter(item => item._id !== _id))
+      if (res.confirm) {
+        Taro.showLoading({
+          title: '加载中...'
+        })
+    
+        Taro.cloud.callFunction({
+          name: "fav",
+          data: {
+            type: 'remove',
+            data: {
+              _id
+            }
+          }
+        // eslint-disable-next-line no-shadow
+        }).then(res => {
+          if (res.result.stats.removed === 1) {
+            this.onSuccess(this.state.result.filter(item => item._id !== _id))
+          }
+        }).catch(err => {
+          this.onError(err)
+        })
       }
-    }).catch(err => {
-      this.onError(err)
     })
   }
 
@@ -110,10 +119,15 @@ export default class Index extends Component {
                     author={res.author}
                     bookType={res.book_type}
                     key={res._id}
-                    hasDeleteAction
                     onClick={this.onClick.bind(this, res.bid)}
-                    onDelete={this.onDelete.bind(this, res._id)}
-                  />
+                  >
+                    <CustomButton
+                      className='custom-button'
+                      onClick={this.onDelete.bind(this, res._id, res.title)}
+                    >
+                      删除
+                    </CustomButton>
+                  </Thumb>
                 )
               })
             }

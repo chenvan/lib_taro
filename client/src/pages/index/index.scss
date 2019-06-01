@@ -2,13 +2,10 @@
   display: flex;
   flex-direction: column;
 
-  .action-zone, .scan, .borrowing {
+  .action-zone, .scan, .borrowing-board {
     display: flex;
     flex-direction: column;
     background-color: white;
-  }
-  
-  .action-zone, .scan, .borrowing {
     margin-top: 48px;
   }
   
@@ -29,7 +26,7 @@
     }
   }
   
-  .action-name {
+  .action-name-first, .action-name-others {
     padding: 24px 0;
   }
   
@@ -37,15 +34,17 @@
     padding: 40px 0;
   }
   
-  .action-name, .scan-borrow, .scan-return {
+  .action-name-first, .action-name-others, .scan-borrow, .scan-return {
     letter-spacing: 8px;
     flex: 1;
   }
   
-  .action-button:not(:first-child) .action-name, .scan-return {
+  .action-name-others, .scan-return {
     border-top: 1px solid rgba($color: black, $alpha: 0.1); 
   }
 }
+
+ 
 
 
 

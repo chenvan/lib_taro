@@ -33,10 +33,14 @@
     margin-bottom: 8px;
   }
 
-  .del-button {
-    font-size: 28px;
-    opacity: 0.8;
-    letter-spacing: 6px;
+  .return-date-outdated {
+    color: red;
+    font-weight: bolder;
+  }
+
+  .return-date-now {
+    color: yellow;
+    font-weight: bold;
   }
 }
 

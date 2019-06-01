@@ -1,6 +1,8 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image } from '@tarojs/components'
 
+import classNames from 'classnames'
+
 import './index.scss'
 
 export default class CustomButton extends Component {
@@ -8,22 +10,29 @@ export default class CustomButton extends Component {
     addGlobalClass: true
   }
 
-  onClick = () => {
+  onClick = e => {
+    e.stopPropagation()
     if (!this.props.disabled) {
       this.props.onClick && this.props.onClick()
     }
   }
 
   render () {
+    let btnClass = classNames({
+      'custom-button-root': true,
+      'custom-button': true,
+      'custom-button-disabled': this.props.disabled
+    })
+    
     return (
       <View 
-        class={`button-root ${this.props.disabled ? 'button-root-disabled,' : ''} custom-button`}
+        class={btnClass}
         onClick={this.onClick}
       >
         { 
           this.props.src && (
             <Image
-              class='button-icon'
+              class='custom-button-icon'
               mode='widthFix'
               src={this.props.src}
               style={`width: ${this.props.iconWidth || '24px'}`}

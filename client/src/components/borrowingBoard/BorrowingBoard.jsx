@@ -7,8 +7,8 @@ import './index.scss'
 
 export default class BorrowingBoard extends Component {
 
-  constructor (props) {
-    super(props)
+  static options = {
+    addGlobalClass: true
   }
 
   componentWillMount () { }
@@ -30,12 +30,10 @@ export default class BorrowingBoard extends Component {
   render () {
     const { status, title, author, cover, returnDate, bid } = this.props
     return (
-      <View class={this.props.class}>
+      <View class='borrowing-board'>
         {
           status === 'loading' ? (
-              <View
-                class='borrowing-board-loading'
-              >
+              <View class='borrowing-board-loading'>
                 加载中...
               </View>
           ) : (
@@ -49,9 +47,7 @@ export default class BorrowingBoard extends Component {
                   onClick={this.onClick.bind(this, bid)}
                 />
               ) : (
-                <View
-                  class='no-borrowing'
-                >
+                <View class='no-borrowing'>
                   还没借书, 赶紧去借吧
                 </View>
               )

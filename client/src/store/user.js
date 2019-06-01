@@ -14,9 +14,11 @@ const user = observable({
     })
   },
   clearAll() {
-    
-    ['_id', 'name', 'isAdmin', 'loginDate', 'isVisitor'].forEach(key => this[key] = undefined)
-    Taro.clearStorageSync()
+    Taro.clearStorage().then(() => {
+      // clear isAdmin, scan zone will show BorrowingBoard Component
+      // clear isVisitor, disabled button will change 
+      ['_id', 'name', 'loginDate'].forEach(key => this[key] = undefined)
+    })
   },
   isLoginDateOutdated() {
     if (this.loginDate) {

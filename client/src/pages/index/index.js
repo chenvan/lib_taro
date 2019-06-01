@@ -162,7 +162,7 @@ export default class Index extends Component {
       if (!res.result.msg) {
         bookInfo = res.result.data
       }
-      console.log(bookInfo)
+
       this.setState({
         borrowingStatus: 'success',
         borrowingTitle: bookInfo.title,
@@ -171,6 +171,7 @@ export default class Index extends Component {
         borrowingCover: bookInfo.cover,
         borrowingReturnDate: bookInfo.returnDate
       })
+      
     }).catch(err => {
       this.setState({
         borrowingStatus: 'error'
@@ -217,30 +218,32 @@ export default class Index extends Component {
               </CustomButton>
             </View>
           ) : (
-            <View class='borrowing'>
-              <BorrowingBoard 
-                status={this.state.borrowingStatus}
-                title={this.state.borrowingTitle}
-                author={this.state.borrowingAuthor}
-                cover={this.state.borrowingCover}
-                bid={this.state.borrowingBid}
-                returnDate={this.state.borrowingReturnDate}
-              />
-            </View>
+            <BorrowingBoard
+              class='borrowing-board'
+              status={this.state.borrowingStatus}
+              title={this.state.borrowingTitle}
+              author={this.state.borrowingAuthor}
+              cover={this.state.borrowingCover}
+              bid={this.state.borrowingBid}
+              returnDate={this.state.borrowingReturnDate}
+            />
           )
         }
         <View class='action-zone'>
           {
-            this.actionList.map(actionName => {
+            this.actionList.map((actionName, index) => {
               return (
                 <CustomButton
                   key={actionName}
                   onClick={this.actionFunc.bind(this, actionName)}
                   src={this.actionIcon[actionName]}
-                  class='action-button'
                   disabled={this.props.user.isVisitor && this.disabledAction.includes(actionName)}
                 >
-                  <Text class='action-name'>{actionName}</Text>
+                  <Text 
+                    class={index === 0 ? 'action-name-first' : 'action-name-others'}
+                  >
+                    {actionName}
+                  </Text>
                 </CustomButton>
               )
             })
