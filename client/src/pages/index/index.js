@@ -116,7 +116,7 @@ export default class Index extends Component {
         }
       })
     }).then(res => {
-      
+      console.log('after scan: ', res)
       let title = res.result.msg ? '告知' : '成功'
       let content = res.result.msg || ( type === 'add' ? '借阅成功' : '还书成功' )
       Taro.hideLoading()
@@ -126,6 +126,7 @@ export default class Index extends Component {
       })
     }).catch(err => {
       Taro.hideLoading()
+      console.log('after scan: ', err)
       if (err.errMsg !== 'scanCode:fail cancel') {
         let content = err.errMsg || err.message
         Taro.showModal({

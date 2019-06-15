@@ -3,7 +3,9 @@ import Taro from '@tarojs/taro'
 
 const user = observable({
   _id: Taro.getStorageSync('_id'),
+  formId: Taro.getStorageSync('formId'),
   name: Taro.getStorageSync('name'),
+  touser: Taro.getStorageSync('touser'),
   isAdmin: Taro.getStorageSync('isAdmin'),
   loginDate: Taro.getStorageSync('loginDate'), 
   isVisitor: Taro.getStorageSync('isVisitor'),
@@ -17,7 +19,7 @@ const user = observable({
     Taro.clearStorage().then(() => {
       // clear isAdmin, scan zone will show BorrowingBoard Component
       // clear isVisitor, disabled button will change 
-      ['_id', 'name', 'loginDate'].forEach(key => this[key] = undefined)
+      ['_id', 'name', 'loginDate', 'touser', 'formId'].forEach(key => this[key] = undefined)
     })
   },
   isLoginDateOutdated() {

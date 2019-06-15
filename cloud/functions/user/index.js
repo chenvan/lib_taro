@@ -66,6 +66,7 @@ exports.main = async (event, context) => {
         if (isPasswordValid(data.pwd, res.data.pwd, res.data.salt)) {
           return {
             name: res.data.name,
+            touser: cloud.getWXContext().OPENID
           }
         } else {
           return { error: 'cloud pwd'}

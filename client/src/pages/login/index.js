@@ -86,9 +86,13 @@ export default class Index extends Component {
             url: '../index/index'
           })
         } else {
+          // console.log('touser: ', res.result.touser)
+          // console.log('formId', event.detail.formId)
           user.set({
             '_id': event.detail.value._id.trim(),
+            'formId': event.detail.formId,
             'name': res.result.name,
+            'touser': res.result.touser,
             'isVisitor': false,
             'isAdmin': event.detail.value._id.trim() === 'admin',
             'loginDate': new Date()
@@ -108,7 +112,9 @@ export default class Index extends Component {
   loginAsVisitor = () => {
     this.props.user.set({
       '_id': '',
+      'formId': '',
       'name': '游客',
+      'touser': '',
       'isVisitor': true,
       'isAdmin': false,
       'loginDate': new Date()
@@ -157,6 +163,7 @@ export default class Index extends Component {
         </View>
         <Form
           onSubmit={this.submit}
+          report-submit
         >
           {
             !isChangePWD && <Input 

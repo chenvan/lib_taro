@@ -71,8 +71,9 @@ export default class Index extends Component {
   onSuccess = (from, data) => {
     Taro.hideLoading()
     if (from === 'book') {
+      // console.log('data: ', data)
       let { author, book_type, can_borrow_num, cover, isbn, master, summary, title, total_num } = data
-
+     
       this.setState({
         status: 'success',
         author,
@@ -94,6 +95,8 @@ export default class Index extends Component {
           bid: this.state.bid,
           uid: this.props.user._id,
           name: this.props.user.name,
+          touser: this.props.user.touser,
+          formId: this.props.user.formId,
         })
       })
     } else if (from === 'fav') {
