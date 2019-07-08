@@ -11,9 +11,23 @@ export default class BorrowingBoard extends Component {
     addGlobalClass: true
   }
 
+  constructor (props) {
+    super(props)
+    this.state = {
+      status: 'loading',
+      title: '',
+      author: '',
+      cover: '',
+      bid: '',
+      returnDate: '',
+    }
+  }
+
   componentWillMount () { }
 
-  componentDidMount () { }
+  componentDidMount () { 
+    this.init()
+  }
 
   componentWillUnmount () { }
 
@@ -27,8 +41,48 @@ export default class BorrowingBoard extends Component {
     })
   }
 
+  init = async () => {
+    await this.getBorrowingInfo()
+    Taro.eventCenter.on('getBorrowingInfo', this.getBorrowingInfo)
+  }
+
+  getBorrowingInfo = async () => {
+    let uid = this.props.uid
+    let info = {}
+
+    try {
+      if (this.state.status !== 'loading') this.setState({ status: 'loading' })
+
+      let { result } = await Taro.cloud.callFunction({ 
+                                name: 'borrowing', 
+                                data: { type: 'get', data: { uid } } 
+                              })
+      
+      info = result.data
+      info.status = 'success'
+
+    } catch (err) {
+      // err we should handle
+      if (err.message && err.message.includes(`${uid} does not exist`)) {
+        info.status = 'success'
+      } else {
+        // err we do not handle
+        info.status = 'fail'
+      }
+    }
+
+    this.setState({
+      status: info.status,
+      title: info.title,
+      author: info.author,
+      cover: info.cover,
+      returnDate: info.returnDate,
+      bid: info.bid,
+    })
+  }
+
   render () {
-    const { status, title, author, cover, returnDate, bid } = this.props
+    const { status, title, author, cover, returnDate, bid } = this.state
     return (
       <View class='borrowing-board'>
         {

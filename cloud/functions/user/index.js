@@ -45,42 +45,25 @@ function changePassword (uid, newPassword) {
   })
 }
 
-function handleLoginError (err) {
-  if (err.errCode === -1) {
-    return {
-      error: 'cloud _id'
-    }
-  } else {
-    throw err
-  }
-}
-
 // 云函数入口函数
 exports.main = async (event, context) => {
-  // console.log(event)
   const { type, data } = event
 
-  if (type === 'login') {
-    return findUser(data._id)
-      .then(res => {
-        if (isPasswordValid(data.pwd, res.data.pwd, res.data.salt)) {
-          return {
-            name: res.data.name,
-            touser: cloud.getWXContext().OPENID
-          }
-        } else {
-          return { error: 'cloud pwd'}
-        }
-      })
-      .catch(err => handleLoginError(err))
-  } else if (type === 'changePWD') {
-    return findUser(data._id)
-      .then(res => {
-        if (isPasswordValid(data.pwd, res.data.pwd, res.data.salt)) {
-          return changePassword(data._id, data.newPWD)
-        } else {
-          return { error: 'cloud pwd'} 
-        }
-      })
-  }
+  return findUser(data._id).then(res => {
+    // console.log(res)
+    if (isPasswordValid(data.pwd, res.data.pwd, res.data.salt)) {
+      let resp
+      if (type === 'login') {
+        resp = Promise.resolve({
+          name: res.data.name,
+          touser: cloud.getWXContext().OPENID
+        })
+      } else if (type === 'changePWD') {
+        resp = changePassword(data._id, data.newPWD)
+      }
+      return resp
+    } else {
+      return Promise.reject('密码错误')
+    }
+  })
 }

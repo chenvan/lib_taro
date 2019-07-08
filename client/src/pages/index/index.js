@@ -38,14 +38,6 @@ export default class Index extends Component {
 
     this.disabledAction = ['更改密码', '收藏']
     
-    this.state = {
-      borrowingStatus: 'loading',
-      borrowingTitle: undefined,
-      borrowingAuthor: undefined,
-      borrowingBid: undefined,
-      borrowingCover: undefined,
-      borrowingReturnDate: undefined
-    }
   }
   
   
@@ -58,12 +50,9 @@ export default class Index extends Component {
   }
 
   componentDidMount () { 
-    // page for dev
-    // let devUrl = '../outdated/index'
-    // Taro.navigateTo({
-    //   url: devUrl
-    // })
-    this.getBorrowingInfo()
+    if (process.env.NODE_ENV === 'development') {
+      console.log('dev')
+    }
   }
 
   componentWillUnmount () { }
@@ -137,48 +126,12 @@ export default class Index extends Component {
     })
   }
 
-  refresh = () => {
-    this.setState({
-      borrowingStatus: 'loading',
-      borrowingTitle: undefined,
-      borrowingAuthor: undefined,
-      borrowingBid: undefined,
-      borrowingCover: undefined,
-      borrowingReturnDate: undefined
-    })
-    this.getBorrowingInfo()
+  onError = err => {
+    console.log(err)
   }
 
-  getBorrowingInfo = () => {
-    Taro.cloud.callFunction({
-      name: 'borrowing',
-      data: {
-        type: 'get',
-        data: {
-          uid: this.props.user._id
-        }
-      }
-    }).then(res => {
-      let bookInfo = {}
-      if (!res.result.msg) {
-        bookInfo = res.result.data
-      }
-
-      this.setState({
-        borrowingStatus: 'success',
-        borrowingTitle: bookInfo.title,
-        borrowingAuthor: bookInfo.author,
-        borrowingBid: bookInfo.bid,
-        borrowingCover: bookInfo.cover,
-        borrowingReturnDate: bookInfo.returnDate
-      })
-      
-    }).catch(err => {
-      this.setState({
-        borrowingStatus: 'error'
-      })
-      console.log(err)
-    })
+  refresh = () => {
+    Taro.eventCenter.trigger('getBorrowingInfo')
   }
 
   render () {
@@ -221,12 +174,7 @@ export default class Index extends Component {
           ) : (
             <BorrowingBoard
               class='borrowing-board'
-              status={this.state.borrowingStatus}
-              title={this.state.borrowingTitle}
-              author={this.state.borrowingAuthor}
-              cover={this.state.borrowingCover}
-              bid={this.state.borrowingBid}
-              returnDate={this.state.borrowingReturnDate}
+              uid={this.props.user._id}
             />
           )
         }

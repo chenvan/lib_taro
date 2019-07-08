@@ -35,7 +35,7 @@ exports.main = async (event, context) => {
     return db.collection('fav').where({
       uid: data.uid
     })
-      .orderBy('createTime', 'desc')
-      .get()
+    .orderBy('createTime', 'desc')
+    .get()
   }
 }

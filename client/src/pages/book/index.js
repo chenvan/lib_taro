@@ -49,9 +49,7 @@ export default class Index extends Component {
       name: "book",
       data: {
         type: 'get',
-        data: {
-          getId
-        }
+        data: { getId }
       }
     })
     .then(res => {
@@ -88,15 +86,16 @@ export default class Index extends Component {
       })
 
       drawQrcode({
-        width: 150,
-        height: 150,
+        width: 200,
+        height: 200,
         canvasId: 'qrcode',
         text: JSON.stringify({
           bid: this.state.bid,
           uid: this.props.user._id,
           name: this.props.user.name,
+          title: title,
           touser: this.props.user.touser,
-          formId: this.props.user.formId,
+          formId: this.props.user.formId, // 换一种方式获取 ?
         })
       })
     } else if (from === 'fav') {
@@ -106,7 +105,7 @@ export default class Index extends Component {
     }
   }
 
-  onError =(from, err) => {
+  onError = (from, err) => {
     Taro.hideLoading()
 
     if (from === 'book') {
