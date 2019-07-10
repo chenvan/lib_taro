@@ -23,17 +23,9 @@ export default class BorrowingBoard extends Component {
     }
   }
 
-  componentWillMount () { }
-
   componentDidMount () { 
     this.init()
   }
-
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
 
   onClick = _id => {
     Taro.navigateTo({

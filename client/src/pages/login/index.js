@@ -23,10 +23,9 @@ export default class Index extends Component {
 
   componentDidHide () { }
 
-  checkInput = data => {
+  checkInput = (data, isChangePWD) => {
     
-    let isChangePWD = this.$router.params.isChangePWD,
-        transTable = {
+    let transTable = {
           '_id': '工号',
           'pwd': isChangePWD? '旧密码' : '密码',
           'newPWD': '新密码',
@@ -48,9 +47,8 @@ export default class Index extends Component {
     }
   }
 
-  userCloudFunc = rawData => {
-    let isChangePWD = this.$router.params.isChangePWD,
-        type = isChangePWD ? 'changePWD' : 'login',
+  callUserFunc = (rawData, isChangePWD) => {
+    let type = isChangePWD ? 'changePWD' : 'login',
         data = isChangePWD ? {
             _id: this.props.user._id,
             pwd: rawData.pwd,
@@ -68,35 +66,35 @@ export default class Index extends Component {
 
   submit = async event => {
     let isChangePWD = this.$router.params.isChangePWD
-    const { user } = this.props
 
     try {
       Taro.showLoading({
         title: '加载中...'
       })
       
-      this.checkInput(event.detail.value)
-      let res = await this.userCloudFunc(event.detail.value)
-      // console.log('res: ', res)
+      this.checkInput(event.detail.value, isChangePWD)
+      let { result } = await this.callUserFunc(event.detail.value, isChangePWD)
       
       Taro.hideLoading()
+
       if (isChangePWD) {
-        user.clearAll()
+        this.props.user.clearAll()
         Taro.reLaunch({
           url: '../index/index'
         })
       } else {
         // console.log('touser: ', res.result.touser)
         // console.log('formId', event.detail.formId)
-        user.set({
+        await this.props.user.set({
           '_id': event.detail.value._id,
           'formId': event.detail.formId,
-          'name': res.result.name,
-          'touser': res.result.touser,
+          'name': result.name,
+          'touser': result.touser,
           'isVisitor': false,
           'isAdmin': event.detail.value._id === 'admin',
           'loginDate': new Date()
         })
+
         Taro.redirectTo({
           url: '../index/index'
         })
@@ -107,8 +105,12 @@ export default class Index extends Component {
     }
   }
 
-  loginAsVisitor = () => {
-    this.props.user.set({
+  loginAsVisitor = async () => {
+    Taro.showLoading({
+      title: '加载中...'
+    })
+
+    await this.props.user.set({
       '_id': '',
       'formId': '',
       'name': '游客',
@@ -117,6 +119,7 @@ export default class Index extends Component {
       'isAdmin': false,
       'loginDate': new Date()
     })
+
     Taro.redirectTo({
       url: '../index/index'
     })

@@ -35,24 +35,20 @@ export default class Index extends Component {
       '借书扫码': scanSrc,
       '还书扫码': scanSrc
     }
-
     this.disabledAction = ['更改密码', '收藏']
-    
-  }
-  
-  
-  componentWillMount () { 
-    if(this.props.user.isLoginDateOutdated()) {
-      Taro.redirectTo({
-        url: '../login/index'
-      })
+
+    this.state = {
+      loading: true
     }
+    
   }
 
   componentDidMount () { 
     if (process.env.NODE_ENV === 'development') {
       console.log('dev')
     }
+
+    this.init()
   }
 
   componentWillUnmount () { }
@@ -67,18 +63,33 @@ export default class Index extends Component {
     })
   }
 
+  init = async () => {
+    // Taro.showLoading()
+    if(!this.props.user.name) {
+      await this.props.user.init()
+    }
+    
+    if(this.props.user.isLoginDateOutdated()) {
+      Taro.redirectTo({url: '../login/index'})
+    }
+
+    this.setState({
+      loading: false
+    })
+  }
+
   actionFunc = name => {
-    let list = {
+    let funcList = {
       '收藏': this.navigateTo.bind(this, '../fav/index'),
       '搜索': this.navigateTo.bind(this, '../search/index'),
       '逾期名单': this.navigateTo.bind(this, '../outdated/index'),
-      '退出登录': this.logout,
+      '退出登录': this.logout.bind(this),
       '更改密码': this.navigateTo.bind(this, '../login/index?isChangePWD=true')
     }
-    list[name]()
+    return funcList[name]
   }
 
-  logout = () => {
+  logout = async () => {
     this.props.user.clearAll()
     Taro.redirectTo({
       url: '../login/index'
@@ -86,44 +97,74 @@ export default class Index extends Component {
   }
 
 
-  scan = action => {
+  scan = async action => {
     let type = action === 'borrow' ? 'add' : 'del'
+    let content = ''
+    let title = ''
 
-    Taro.scanCode({
-      onlyFromCamera: true,
-      scanType: 'qrcode'
-    }).then(res => {
-      Taro.showLoading({
-        title: '加载中...'
-      })
-
-      return Taro.cloud.callFunction({
-        name: 'borrowing',
-        data: {
-          type,
-          data: JSON.parse(res.result)
-        }
-      })
-    }).then(res => {
-      console.log('after scan: ', res)
-      let title = res.result.msg ? '告知' : '成功'
-      let content = res.result.msg || ( type === 'add' ? '借阅成功' : '还书成功' )
-      Taro.hideLoading()
-      Taro.showModal({
-        title,
-        content,
-      })
-    }).catch(err => {
-      Taro.hideLoading()
-      console.log('after scan: ', err)
-      if (err.errMsg !== 'scanCode:fail cancel') {
-        let content = err.errMsg || err.message
-        Taro.showModal({
-          title: '出错',
-          content,
+    try {
+      let scanData = await Taro.scanCode({ 
+          onlyFromCamera: true, 
+          scanType: 'qrcode' 
         })
+
+      Taro.showLoading({ title: '加载中... '})
+      
+      let { result } = await Taro.cloud.callFunction({
+          name: 'borrowing',
+          data: { type, data: JSON.parse(scanData.result) }
+        })
+
+      title = result.msg ? '告知': '成功'
+      content = result.msg || ( type === 'add' ? '借阅成功' : '还书成功' )
+    } catch (err) {
+      if (err.errMsg !== 'scanCode:fail cancel') {
+        title = '出错'
+        content = err.errMsg || err.message
       }
-    })
+    }
+
+    Taro.hideLoading()
+
+    if (title) {
+      Taro.showModal({title, content})
+    }
+
+    // Taro.scanCode({
+    //   onlyFromCamera: true,
+    //   scanType: 'qrcode'
+    // }).then(res => {
+    //   Taro.showLoading({
+    //     title: '加载中...'
+    //   })
+
+    //   return Taro.cloud.callFunction({
+    //     name: 'borrowing',
+    //     data: {
+    //       type,
+    //       data: JSON.parse(res.result)
+    //     }
+    //   })
+    // }).then(res => {
+    //   console.log('after scan: ', res)
+    //   let title = res.result.msg ? '告知' : '成功'
+    //   let content = res.result.msg || ( type === 'add' ? '借阅成功' : '还书成功' )
+    //   Taro.hideLoading()
+    //   Taro.showModal({
+    //     title,
+    //     content,
+    //   })
+    // }).catch(err => {
+    //   Taro.hideLoading()
+    //   console.log('after scan: ', err)
+    //   if (err.errMsg !== 'scanCode:fail cancel') {
+    //     let content = err.errMsg || err.message
+    //     Taro.showModal({
+    //       title: '出错',
+    //       content,
+    //     })
+    //   }
+    // })
   }
 
   onError = err => {
@@ -135,7 +176,9 @@ export default class Index extends Component {
   }
 
   render () {
-    return (
+    return this.state.loading ? (
+      <View>加载中...</View>
+    ) : (
       <View class='root'>
         <Header 
           class='header'
@@ -184,7 +227,7 @@ export default class Index extends Component {
               return (
                 <CustomButton
                   key={actionName}
-                  onClick={this.actionFunc.bind(this, actionName)}
+                  onClick={this.actionFunc(actionName)}
                   src={this.actionIcon[actionName]}
                   disabled={this.props.user.isVisitor && this.disabledAction.includes(actionName)}
                 >

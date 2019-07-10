@@ -29,7 +29,6 @@ export default class Index extends Component {
       summary: '',
       title: '',
       total_num: 0,
-      bid: '',
       showState: 'none',
     }
   }
@@ -37,34 +36,25 @@ export default class Index extends Component {
   componentWillMount () { }
 
   componentDidMount () {
-    Taro.showLoading({
-      title: '加载中...'
-    })
-    
-    const getId = this.$router.params._id || '5cc15d291515aaa537798e04'
-
-    this.setState({bid: getId})
-    
-    Taro.cloud.callFunction({
-      name: "book",
-      data: {
-        type: 'get',
-        data: { getId }
-      }
-    })
-    .then(res => {
-      this.onSuccess('book', res.result.data)
-    })
-    .catch(err => {
-      this.onError('book', err)
-    })
+    this.init()
   }
 
-  componentWillUnmount () { }
+  init = async () => {
+    this.bid = this.$router.params._id || '5cc15d291515aaa537798e04' // the last one for dev
 
-  componentDidShow () { }
-
-  componentDidHide () { }
+    Taro.showLoading({ title: '加载中...'})
+    
+    try {
+      let { result } = await Taro.cloud.callFunction({
+          name: 'book',
+          data: { type: 'get', data: { getId: this.bid } }
+        })
+      
+      this.onSuccess('book', result.data)
+    } catch (err) {
+      this.onError('book', err)
+    }
+  }
 
   onSuccess = (from, data) => {
     Taro.hideLoading()
@@ -89,8 +79,9 @@ export default class Index extends Component {
         width: 200,
         height: 200,
         canvasId: 'qrcode',
+        // 是否需要这么多数据 ???
         text: JSON.stringify({
-          bid: this.state.bid,
+          bid: this.bid,
           uid: this.props.user._id,
           name: this.props.user.name,
           title: title,
@@ -99,9 +90,7 @@ export default class Index extends Component {
         })
       })
     } else if (from === 'fav') {
-      Taro.showToast({
-        title: '收藏成功'
-      })
+      Taro.showToast({ title: '收藏成功' })
     }
   }
 
@@ -110,61 +99,59 @@ export default class Index extends Component {
 
     if (from === 'book') {
       console.log(err)
-      this.setState({
-        status: 'error'
-      })
+      this.setState({ status: 'error' })
     } else if (from === 'fav') {
-      let { errMsg } = err
+      // 有问题
+      console.log(err)
+      let msg = err.errMsg || err.message
 
       // other method ??
-      if (errMsg.includes('_fav_ dup key')) {
-        errMsg = '已经收藏'
-      } else if (errMsg.includes('超过收藏数')) {
-        errMsg = '超过收藏数'
+      if (msg && msg.includes('_fav_ dup key')) {
+        msg = '已经收藏'
+      } else if (msg && msg.includes('超过收藏数')) {
+        // 
+        msg = '超过收藏数'
       }
 
       Taro.showModal({
         title: '出错',
-        content: errMsg
+        content: msg
       })
     }
   }
 
   showQrcode = () => {
-    this.setState({
-      showState: 'block'
-    })
+    this.setState({ showState: 'block' })
   }
 
   hideQrcode = () => {
-    this.setState({
-      showState: 'none'
-    })
+    this.setState({ showState: 'none' })
   }
 
-  addToFav = () => {
+  addToFav = async () => {
     Taro.showLoading({
       title: '加载中...',
       mask: true
     })
 
-    return Taro.cloud.callFunction({
-      name: "fav",
-      data: {
-        type: 'add',
-        data: {
-          uid: this.props.user._id,
-          bid: this.state.bid,
-          title: this.state.title,
-          author: this.state.author,
-          cover: this.state.cover
-        }
-      }
-    }).then(() => {
+    try {
+      await Taro.cloud.callFunction({
+          name: "fav",
+          data: {
+            type: 'add',
+            data: {
+              uid: this.props.user._id,
+              bid: this.bid,
+              title: this.state.title,
+              author: this.state.author,
+              cover: this.state.cover
+            }
+          }
+      })
       this.onSuccess('fav')
-    }).catch(err => {
+    } catch (err) {
       this.onError('fav', err)
-    })
+    }
   }
 
   render () {
