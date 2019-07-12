@@ -45,7 +45,10 @@ export default class Index extends Component {
 
   componentDidMount () { 
     if (process.env.NODE_ENV === 'development') {
+      // init test db env
       console.log('dev')
+    } else if (process.env.NODE_ENV === 'production') {
+      // init release db env
     }
 
     this.init()
@@ -110,9 +113,14 @@ export default class Index extends Component {
 
       Taro.showLoading({ title: '加载中... '})
       
+      let keys = ['bid', 'uid', 'name', 'touser', 'formId']
+      let values = scanData.result.split('|')
+      let data = {}
+      keys.forEach((key, i) => data[key] = values[i])
+
       let { result } = await Taro.cloud.callFunction({
           name: 'borrowing',
-          data: { type, data: JSON.parse(scanData.result) }
+          data: { type, data }
         })
 
       title = result.msg ? '告知': '成功'
@@ -129,42 +137,6 @@ export default class Index extends Component {
     if (title) {
       Taro.showModal({title, content})
     }
-
-    // Taro.scanCode({
-    //   onlyFromCamera: true,
-    //   scanType: 'qrcode'
-    // }).then(res => {
-    //   Taro.showLoading({
-    //     title: '加载中...'
-    //   })
-
-    //   return Taro.cloud.callFunction({
-    //     name: 'borrowing',
-    //     data: {
-    //       type,
-    //       data: JSON.parse(res.result)
-    //     }
-    //   })
-    // }).then(res => {
-    //   console.log('after scan: ', res)
-    //   let title = res.result.msg ? '告知' : '成功'
-    //   let content = res.result.msg || ( type === 'add' ? '借阅成功' : '还书成功' )
-    //   Taro.hideLoading()
-    //   Taro.showModal({
-    //     title,
-    //     content,
-    //   })
-    // }).catch(err => {
-    //   Taro.hideLoading()
-    //   console.log('after scan: ', err)
-    //   if (err.errMsg !== 'scanCode:fail cancel') {
-    //     let content = err.errMsg || err.message
-    //     Taro.showModal({
-    //       title: '出错',
-    //       content,
-    //     })
-    //   }
-    // })
   }
 
   onError = err => {

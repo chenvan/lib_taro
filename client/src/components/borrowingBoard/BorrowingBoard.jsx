@@ -39,6 +39,7 @@ export default class BorrowingBoard extends Component {
   }
 
   getBorrowingInfo = async () => {
+    // console.log(this.props.uid)
     let uid = this.props.uid
     let info = {}
 
@@ -46,17 +47,23 @@ export default class BorrowingBoard extends Component {
       if (this.state.status !== 'loading') this.setState({ status: 'loading' })
 
       let { result } = await Taro.cloud.callFunction({ 
-                                name: 'borrowing', 
-                                data: { type: 'get', data: { uid } } 
-                              })
+          name: 'borrowing', 
+          data: { type: 'get', data: { uid } } 
+        })
       
+      // console.log(result)
       info = result.data
       info.status = 'success'
 
     } catch (err) {
       // err we should handle
-      if (err.message && err.message.includes(`${uid} does not exist`)) {
-        info.status = 'success'
+      // console.log(err)
+
+      let msg = err.errMsg || err.message
+
+      if (msg && msg.includes(`${uid} does not exist`)) {
+        // console.log('in success')
+        info.status = 'no-borrowing'
       } else {
         // err we do not handle
         info.status = 'fail'
@@ -74,32 +81,38 @@ export default class BorrowingBoard extends Component {
   }
 
   render () {
-    const { status, title, author, cover, returnDate, bid } = this.state
+    let { status, title, author, cover, returnDate, bid } = this.state
+
     return (
       <View class='borrowing-board'>
         {
-          status === 'loading' ? (
-              <View class='borrowing-board-loading'>
-                加载中...
-              </View>
-          ) : (
-            status === 'success' ? (
-              title ? (
-                <Thumb 
-                  cover={cover}
-                  title={title}
-                  author={author}
-                  returnDate={returnDate.slice(0, 10)}
-                  onClick={this.onClick.bind(this, bid)}
-                />
-              ) : (
-                <View class='no-borrowing'>
-                  还没借书, 赶紧去借吧
-                </View>
-              )
-            ) : (
-              <View>Error</View>
-            )
+          status === 'loading' && (
+            <View class='borrowing-board-loading'>
+              加载中...
+            </View>
+          )
+        }
+        {
+          status === 'success' && (
+            <Thumb 
+              cover={cover}
+              title={title}
+              author={author}
+              returnDate={returnDate.slice(0, 10)}
+              onClick={this.onClick.bind(this, bid)}
+            />
+          )
+        }
+        {
+          status === 'no-borrowing' && (
+            <View class='no-borrowing'>
+              还没借书, 赶紧去借吧
+            </View>
+          ) 
+        }
+        {
+          status === 'fail' && (
+            <View>Error</View>
           )
         }
       </View>

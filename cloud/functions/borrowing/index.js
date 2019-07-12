@@ -20,81 +20,92 @@ function getBookInfo (bid) {
     })
 }
 
-function borrowBook (uid, bid, name, touser, formId, title, author, cover) {
-  return db.collection('borrowing').add({
-    data: {
-      _id: uid,
-      returnDate: db.serverDate({
-        offset: 60 * 60 * 1000 * 24 * 7
-      }),
-      bid,
-      name,
-      title,
-      author,
-      cover
-    }}
-  ).then(res => {
-    return db.collection('book').doc(bid).update({
+async function borrowBook (uid, bid, name, touser, formId) {
+
+  let [ canBorrow, { author, title, cover } ] = await getBookInfo(bid)
+
+  if (!canBorrow) throw Error(`${bookInfo.title}已经借完`)
+  
+  await db.collection('borrowing').add({
+      data: {
+        _id: uid,
+        returnDate: db.serverDate({
+          offset: 60 * 60 * 1000 * 24 * 7
+        }),
+        bid,
+        name,
+        title,
+        author,
+        cover,
+      }
+    })
+
+  await db.collection('book').doc(bid).update({
       data: {
         can_borrow_num: _.inc(-1)
       }
     })
-  }).then(_ => {
-    return sendMessage(touser, formId, 'borrow', title)
-  })
-  // .catch(err => {
-  //   if (typeof err.errMsg === 'string' && err.errMsg.includes('_id_ dup')) {
-  //     return {
-  //       msg: '借书人借书额度已用完'
+  
+  await sendMessage(touser, formId, 'borrow', title)
+  
+  // return db.collection('borrowing').add({
+  //   data: {
+  //     _id: uid,
+  //     returnDate: db.serverDate({
+  //       offset: 60 * 60 * 1000 * 24 * 7
+  //     }),
+  //     bid,
+  //     name,
+  //     title,
+  //     author,
+  //     cover
+  //   }}
+  // ).then(res => {
+  //   return db.collection('book').doc(bid).update({
+  //     data: {
+  //       can_borrow_num: _.inc(-1)
   //     }
-  //   } else {
-  //     throw Error(err)
-  //   }
-  // }).then(() => {
+  //   })
+  // }).then(_ => {
   //   return sendMessage(touser, formId, 'borrow', title)
   // })
 }
 
 function getBorrowingBook (uid) {
   return db.collection('borrowing').doc(uid).get()
-    // .catch(err => {
-    //   if (typeof err.errMsg === 'string' && err.errMsg.includes(`document with _id ${uid} does not exist`)) {
-    //     return {
-    //       msg: '没有借阅'
-    //     }
-    //   } else {
-    //     throw Error(err)
-    //   }
-    // })
 }
 
 
-function returnBook (uid, bid, touser, formId, title) {
-  return db.collection('borrowing').doc(uid).get()
-    .then(res => {
-      let resp = res.data.bid === bid ? 
-        db.collection('borrowing').doc(uid).remove() : Promise.reject('没有借阅这本书, 归还失败') 
-      return resp
+async function returnBook (uid, bid, touser, formId) {
+  let { data } = await db.collection('borrowing').doc(uid).get()
+  if (data.bid !== bid) throw Error(`借阅的书是${data.title}, 并不是这本`)
+
+  await db.collection('borrowing').doc(uid).remove()
+
+  await db.collection('book').doc(bid).update({
+      data: {
+        can_borrow_num: _.inc(1)
+      }
     })
-    .then(res => {
-      return db.collection('book').doc(bid).update({
-        data: {
-          can_borrow_num: _.inc(1)
-        }
-      })
-    })
-    .then(_ => {
-      return sendMessage(touser, formId, 'return', title)
-    })
-    // .catch(err => {
-    //   if (typeof err.errMsg === 'string' && err.errMsg.includes(`document with _id ${uid} does not exist`)) {
-    //     return {
-    //       msg: '没有借阅这本书, 归还失败'
-    //     }
-    //   } else {
-    //     throw Error(err)
-    //   }
-    // })
+
+  await sendMessage(touser, formId, 'return', data.title)
+
+  // return db.collection('borrowing').doc(uid).get()
+  //   .then(res => {
+  //     let resp = res.data.bid === bid ? 
+  //       db.collection('borrowing').doc(uid).remove() : Promise.reject('没有借阅这本书, 归还失败') 
+  //     return resp
+  //   })
+  //   .then(res => {
+  //     return db.collection('book').doc(bid).update({
+  //       data: {
+  //         can_borrow_num: _.inc(1)
+  //       }
+  //     })
+  //   })
+  //   .then(_ => {
+  //     return sendMessage(touser, formId, 'return', title)
+  //   })
 }
 
 function sendMessage (touser, formId, type, title) {
@@ -140,15 +151,9 @@ exports.main = async (event, context) => {
   const { type, data } = event
 
   if (type === 'add') {
-    return getBookInfo(data.bid).then(([isCanBorrow, bookInfo]) => {
-      let resp = isCanBorrow ? 
-        borrowBook(data.uid, data.bid, data.name, data.touser, data.formId, 
-                    bookInfo.title, bookInfo.author, bookInfo.cover) :
-        Promise.reject(`${bookInfo.title}已经借完`)
-      return resp
-    })    
+    return borrowBook(data.uid, data.bid, data.name, data.touser, data.formId)
   } else if (type === 'del') {
-    return returnBook(data.uid, data.bid, data.touser, data.formId, data.title)
+    return returnBook(data.uid, data.bid, data.touser, data.formId)
   } else if (type === 'get') {
     return getBorrowingBook(data.uid)
   } else if (type === 'outdated') {

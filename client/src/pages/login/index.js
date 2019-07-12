@@ -84,10 +84,8 @@ export default class Index extends Component {
         })
       } else {
         // console.log('touser: ', res.result.touser)
-        // console.log('formId', event.detail.formId)
         await this.props.user.set({
           '_id': event.detail.value._id,
-          'formId': event.detail.formId,
           'name': result.name,
           'touser': result.touser,
           'isVisitor': false,
@@ -112,7 +110,6 @@ export default class Index extends Component {
 
     await this.props.user.set({
       '_id': '',
-      'formId': '',
       'name': '游客',
       'touser': '',
       'isVisitor': true,
@@ -157,7 +154,6 @@ export default class Index extends Component {
         </View>
         <Form
           onSubmit={this.submit}
-          report-submit={!isChangePWD}
         >
           {
             !isChangePWD && <Input 

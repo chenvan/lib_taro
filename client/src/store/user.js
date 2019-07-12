@@ -3,7 +3,6 @@ import Taro from '@tarojs/taro'
 
 class User {
   @observable _id = undefined
-  @observable formId = undefined
   @observable name = undefined
   @observable touser = undefined
   @observable isAdmin = undefined
@@ -12,7 +11,7 @@ class User {
 
   @action
   async init () {
-    let keys = ['_id', 'formId', 'name', 'touser', 'isAdmin', 'isVisitor', 'loginDate']
+    let keys = ['_id', 'name', 'touser', 'isAdmin', 'isVisitor', 'loginDate']
     try {
       let dataList = await Promise.all(
         keys.map(key => Taro.getStorage({ key }))
@@ -47,7 +46,7 @@ class User {
 
   @action
   async clearAll () {
-    let keys = ['_id', 'name', 'loginDate', 'touser', 'formId']
+    let keys = ['_id', 'name', 'loginDate', 'touser']
     // Taro.showLoading()
     try {
       await Taro.clearStorage()

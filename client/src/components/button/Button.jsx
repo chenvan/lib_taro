@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image } from '@tarojs/components'
+import { View, Image, Form, Button } from '@tarojs/components'
 
 import classNames from 'classnames'
 
@@ -13,7 +13,7 @@ export default class CustomButton extends Component {
   onClick = e => {
     e.stopPropagation()
     if (!this.props.disabled) {
-      this.props.onClick && this.props.onClick()
+      this.props.onClick && this.props.onClick(e)
     }
   }
 
@@ -25,22 +25,40 @@ export default class CustomButton extends Component {
     })
     
     return (
-      <View 
-        class={btnClass}
-        onClick={this.onClick}
-      >
-        { 
-          this.props.src && (
-            <Image
-              class='custom-button-icon'
-              mode='widthFix'
-              src={this.props.src}
-              style={`width: ${this.props.iconWidth || '24px'}`}
-            />
-          )
-        }
-        {this.props.children}
-      </View>
+      this.props.isCatchFormId ? (
+        <View
+          className={btnClass}
+        >
+          <Form
+            reportSubmit
+            onSubmit={this.onClick}
+          >
+            <Button 
+              formType='submit'
+              className='clear-button-style'
+            >
+              {this.props.children}
+            </Button>
+          </Form>
+        </View>
+      ) : (
+        <View 
+          className={btnClass}
+          onClick={this.onClick}
+        >
+          { 
+            this.props.src && (
+              <Image
+                class='custom-button-icon'
+                mode='widthFix'
+                src={this.props.src}
+                style={`width: ${this.props.iconWidth || '24px'}`}
+              />
+            )
+          }
+          {this.props.children}
+        </View>
+      )
     )
   }
 }

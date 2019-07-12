@@ -75,20 +75,6 @@ export default class Index extends Component {
         total_num,
       })
 
-      drawQrcode({
-        width: 200,
-        height: 200,
-        canvasId: 'qrcode',
-        // 是否需要这么多数据 ???
-        text: JSON.stringify({
-          bid: this.bid,
-          uid: this.props.user._id,
-          name: this.props.user.name,
-          title: title,
-          touser: this.props.user.touser,
-          formId: this.props.user.formId, // 换一种方式获取 ?
-        })
-      })
     } else if (from === 'fav') {
       Taro.showToast({ title: '收藏成功' })
     }
@@ -120,7 +106,32 @@ export default class Index extends Component {
     }
   }
 
-  showQrcode = () => {
+  showQrcode = async event => {
+    Taro.showLoading({title: '加载中...'})
+    // const { screenWidth } = await Taro.getSystemInfo();
+    // const scale = screenWidth / 375;
+    let { _id, name, touser } = this.props.user
+    let formId = event.detail.formId 
+
+
+    drawQrcode({
+      width: 200,
+      height: 200,
+      canvasId: 'qrcode',
+      // 是否需要这么多数据 ?
+      // text: JSON.stringify({
+      //   bid: this.bid,
+      //   uid: this.props.user._id,
+      //   name: this.props.user.name,
+      //   // title: this.state.title,
+      //   touser: this.props.user.touser,
+      //   formId: event.detail.formId,
+      // })
+      text: [this.bid, _id, name, touser, formId].join('|')
+      
+    })
+
+    Taro.hideLoading()
     this.setState({ showState: 'block' })
   }
 
@@ -192,6 +203,7 @@ export default class Index extends Component {
                   class='custom-button' 
                   onClick={this.showQrcode}
                   disabled={this.props.user.isVisitor}
+                  isCatchFormId
                 >
                   二维码
                 </CustomButton>
