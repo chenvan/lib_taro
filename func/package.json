@@ -1,0 +1,11 @@
+{
+  "name": "batch_hash",
+  "version": "1.0.0",
+  "main": "batchHash.js",
+  "author": "awang",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "fast-csv": "^3.1.0"
+  }
+}

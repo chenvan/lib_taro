@@ -2,7 +2,6 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
-import './index.scss'
 
 import Header from '../../components/header/Header'
 import BorrowingBoard from '../../components/borrowingBoard/BorrowingBoard'
@@ -14,6 +13,10 @@ import heartSrc from '../../assert/_ionicons_svg_md-heart-empty.svg'
 import searchSrc from '../../assert/_ionicons_svg_md-search.svg'
 import scanSrc from '../../assert/_ionicons_svg_md-qr-scanner.svg'
 import calendarSrc from '../../assert/_ionicons_svg_md-calendar.svg'
+
+import './index.scss'
+
+import env from '../../setting.js'
 
 @inject('user')
 @observer
@@ -44,12 +47,15 @@ export default class Index extends Component {
   }
 
   componentDidMount () { 
-    if (process.env.NODE_ENV === 'development') {
-      // init test db env
-      console.log('dev')
-    } else if (process.env.NODE_ENV === 'production') {
-      // init release db env
+    let db_env = env.release
+    if (process.env.NODE_ENV !== 'production') {
+      db_env = env.test
+      console.log('not production')
     }
+
+    Taro.cloud.init({
+      env: db_env
+    })
 
     this.init()
   }
@@ -93,10 +99,17 @@ export default class Index extends Component {
   }
 
   logout = async () => {
-    this.props.user.clearAll()
-    Taro.redirectTo({
-      url: '../login/index'
+    let { confirm } = await Taro.showModal({
+      title: '提示',
+      content: '确认退出?'
     })
+
+    if (confirm) {
+      this.props.user.clearAll()
+      Taro.redirectTo({
+        url: '../login/index'
+      })
+    }
   }
 
 

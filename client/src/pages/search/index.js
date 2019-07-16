@@ -4,6 +4,7 @@ import './index.scss'
 
 import Search from '../../components/search/Search'
 import Thumb from '../../components/thumb/Thumb'
+import ListContainer from '../../components/listContainer/ListContainer'
 
 // const test = [
 //   {
@@ -108,7 +109,9 @@ export default class Index extends Component {
         <Search 
           onSearch={this.onSearch}
         />
-        <View class='main'>
+        <ListContainer
+          hasMore={this.state.hasMore}
+        >
           {
             this.state.result.map(res => {
               return (
@@ -123,14 +126,7 @@ export default class Index extends Component {
               )
             })
           }
-        </View>
-        {
-          this.state.hasMore === false && (
-            <View class='footer'>
-              NO MORE
-            </View>
-          )
-        } 
+        </ListContainer>
       </View>
     )
   }

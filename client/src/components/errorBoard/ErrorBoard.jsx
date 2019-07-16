@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View} from '@tarojs/components'
+import { View, Text, Button } from '@tarojs/components'
 
 import './index.scss'
 
@@ -15,10 +15,20 @@ export default class ErrorBoard extends Component {
 
   componentDidHide () { }
 
+  onClick = () => {
+    this.props.onClick && this.props.onClick()
+  }
+
   render () {
     return (
-      <View class={this.props.class}>
-        {this.props.error}
+      <View>
+        <Text>有错误发生</Text>
+        {
+          this.props.onClick && (
+            <Button onClick={this.onClick}>
+              重试
+            </Button>
+          )}
       </View>
     )
   }

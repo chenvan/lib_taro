@@ -118,17 +118,7 @@ export default class Index extends Component {
       width: 200,
       height: 200,
       canvasId: 'qrcode',
-      // 是否需要这么多数据 ?
-      // text: JSON.stringify({
-      //   bid: this.bid,
-      //   uid: this.props.user._id,
-      //   name: this.props.user.name,
-      //   // title: this.state.title,
-      //   touser: this.props.user.touser,
-      //   formId: event.detail.formId,
-      // })
       text: [this.bid, _id, name, touser, formId].join('|')
-      
     })
 
     Taro.hideLoading()

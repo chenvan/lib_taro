@@ -5,6 +5,7 @@ import './index.scss'
 
 import Thumb from '../../components/thumb/Thumb'
 import CustomButton from '../../components/button/Button'
+import ListContainer from '../../components/listContainer/ListContainer'
 
 @inject('user')
 @observer
@@ -47,6 +48,11 @@ export default class Index extends Component {
   componentDidShow () { }
 
   componentDidHide () { }
+
+  init = async () => {
+    Taro.showLoading({ title: '加载中...' })
+    
+  }
 
   onSuccess = (data, isInit) => {
     Taro.hideLoading()
@@ -109,7 +115,7 @@ export default class Index extends Component {
     return (
       this.state.status !== 'loading' && (
         this.state.status === 'success' ? (
-          <View class='root'>
+          <ListContainer>
             {
               this.state.result.map(res => {
                 return (
@@ -131,7 +137,7 @@ export default class Index extends Component {
                 )
               })
             }
-          </View>
+          </ListContainer>
         ) : (
           <View>
             Error
