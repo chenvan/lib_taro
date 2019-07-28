@@ -39,6 +39,7 @@ export default class Index extends Component {
         }
       }
     }).then(res => {
+      console.log('fav res: ', res)
       this.onSuccess(res.result.data, true)
     })
   }

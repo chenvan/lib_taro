@@ -4,11 +4,17 @@ const cloud = require('wx-server-sdk')
 cloud.init()
 
 // 云函数入口函数
-const db = cloud.database()
 
 exports.main = async (event, context) => {
+  const { ENV } = cloud.getWXContext()
   const { data, type } = event
   const limit = data.limit || 10
+
+  cloud.updateConfig({
+    env: ENV
+  })
+
+  const db = cloud.database()
 
   if (type === 'search') {
     let query = data.searchInfo === '' ? (

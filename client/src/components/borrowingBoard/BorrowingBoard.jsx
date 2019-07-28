@@ -57,7 +57,8 @@ export default class BorrowingBoard extends Component {
 
     } catch (err) {
       // err we should handle
-      // console.log(err)
+      // 云函数混乱
+      console.log(err)
 
       let msg = err.errMsg || err.message
 
@@ -69,7 +70,7 @@ export default class BorrowingBoard extends Component {
         info.status = 'fail'
       }
     }
-
+    console.log('get borrowing:', info)
     this.setState({
       status: info.status,
       title: info.title,

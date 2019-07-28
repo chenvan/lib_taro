@@ -9,31 +9,69 @@ class User {
   @observable loginDate = undefined
   @observable isVisitor = undefined
 
-  @action
+  @action.bound
   async init () {
-    let keys = ['_id', 'name', 'touser', 'isAdmin', 'isVisitor', 'loginDate']
+    let keys = ['_id', 'name', 'touser', 'isAdmin', 'loginDate']
     try {
+      
       let dataList = await Promise.all(
         keys.map(key => Taro.getStorage({ key }))
       )
 
       // console.log(dataList)
+      // keys.forEach((key, index) => {
+      //   this[key] = dataList[index].data
+      // })
 
+      // this.isVisitor = this.isLoginDateOutdated()
+      // 为什么要使用 runInAction
       runInAction(() => {
         keys.forEach((key, index) => {
           this[key] = dataList[index].data
         })
+        this.isVisitor = this.isLoginDateOutdated()
       })
     } catch (err) {
-      console.log('user init:', err)
+      // 如果没有登录历史, 则设为visitor
+      this.loginAsVisitor()
+      // await this.set({
+      //   '_id': '',
+      //   'name': '游客',
+      //   'touser': '',
+      //   'isVisitor': true,
+      //   'isAdmin': false,
+      //   'loginDate': new Date()
+      // })
+      // console.log('user init:', err)
     }
+  }
+
+  @action.bound
+  async loginAsVisitor () {
+    let visitor = {
+      '_id': null,
+      'name': '游客',
+      'touser': '',
+      'isVisitor': true,
+      'isAdmin': false,
+      'loginDate': new Date()
+    }
+
+    Object.keys(visitor).forEach(key => {
+      this[key] = visitor[key]
+    })
   }
 
   @action
   async set (data) {
+    //
     let saveList = Object.keys(data).reduce((list, key) => {
       this[key] = data[key]
-      list.push(Taro.setStorage({ key, data: data[key] }))
+
+      if (key !== 'isVisitor') {
+        list.push(Taro.setStorage({ key, data: data[key] }))
+      }
+
       return list
     }, [])
 
@@ -46,11 +84,14 @@ class User {
 
   @action
   async clearAll () {
-    let keys = ['_id', 'name', 'loginDate', 'touser']
+    // let keys = ['_id', 'name', 'loginDate', 'touser']
     // Taro.showLoading()
     try {
       await Taro.clearStorage()
-      keys.forEach(key => this[key] = undefined)
+
+
+      this.loginAsVisitor()
+      // keys.forEach(key => this[key] = undefined)
     } catch(err) {
       console.log(err)
     }
@@ -60,7 +101,9 @@ class User {
   @action.bound
   isLoginDateOutdated () {
     if (this.loginDate) {
-      const MAX = 1000 * 60 * 60
+      const hour = 1000 * 60 * 60
+      const MAX = process.env.NODE_ENV !== 'production' ? hour : 24 * 3 * hour
+      
       let currentDate = new Date()
       
       return currentDate - this.loginDate > MAX

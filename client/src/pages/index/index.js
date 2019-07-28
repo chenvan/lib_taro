@@ -47,14 +47,17 @@ export default class Index extends Component {
   }
 
   componentDidMount () { 
-    let db_env = env.release
+    // let db_env = env.release
     if (process.env.NODE_ENV !== 'production') {
-      db_env = env.test
-      console.log('not production')
+      // db_env = env.test
+      // console.log('not production')
+      
     }
+    // console.log('env: ', db_env)
 
+    // 本地初始化似乎不起作用
     Taro.cloud.init({
-      env: db_env
+      env: env.test
     })
 
     this.init()
@@ -73,15 +76,11 @@ export default class Index extends Component {
   }
 
   init = async () => {
-    // Taro.showLoading()
     if(!this.props.user.name) {
+      // if already login, no need to init 
       await this.props.user.init()
     }
     
-    if(this.props.user.isLoginDateOutdated()) {
-      Taro.redirectTo({url: '../login/index'})
-    }
-
     this.setState({
       loading: false
     })
@@ -105,10 +104,8 @@ export default class Index extends Component {
     })
 
     if (confirm) {
-      this.props.user.clearAll()
-      Taro.redirectTo({
-        url: '../login/index'
-      })
+      await this.props.user.clearAll()
+      Taro.redirectTo({url: '../login/index?action=redirect'})
     }
   }
 
@@ -169,6 +166,7 @@ export default class Index extends Component {
           class='header'
           name={this.props.user.name}
           isAdmin={this.props.user.isAdmin}
+          isVisitor={this.props.user.isVisitor}
           _id={this.props.user._id}
         >
           {

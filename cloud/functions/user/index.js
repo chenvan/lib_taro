@@ -4,8 +4,6 @@ const crypto = require('crypto')
 
 cloud.init()
 
-const db = cloud.database()
-
 function genRandomString (length){
   return crypto.randomBytes(Math.ceil(length/2))
     .toString('hex') /** convert to hexadecimal format */
@@ -31,39 +29,36 @@ function isPasswordValid (password, hashPassword, salt) {
   return sha512(password, salt).pwd === hashPassword
 }
 
-function findUser (uid) {
-  return db.collection('user').doc(uid).get()
-}
-
-function changePassword (uid, newPassword) {
-  let {salt, pwd} = saltHashPassword(newPassword)
-  return db.collection('user').doc(uid).update({
-    data: {
-      salt,
-      pwd
-    }
-  })
-}
-
 // 云函数入口函数
-exports.main = async (event, context) => {
+exports.main = async (event) => {
+  const { ENV, OPENID } = cloud.getWXContext()
   const { type, data } = event
 
-  return findUser(data._id).then(res => {
-    // console.log(res)
-    if (isPasswordValid(data.pwd, res.data.pwd, res.data.salt)) {
-      let resp
-      if (type === 'login') {
-        resp = Promise.resolve({
-          name: res.data.name,
-          touser: cloud.getWXContext().OPENID
-        })
-      } else if (type === 'changePWD') {
-        resp = changePassword(data._id, data.newPWD)
-      }
-      return resp
-    } else {
-      return Promise.reject('密码错误')
-    }
+  cloud.updateConfig({
+    env: ENV
   })
+
+  const db = cloud.database()
+
+  let { data: user } = await db.collection('user').doc(data._id).get()
+  if (isPasswordValid(data.pwd, user.pwd, user.salt)) {
+    let res
+    if (type === 'login') {
+      res = Promise.resolve({
+        name: user.name,
+        touser: OPENID,
+      })
+    } else if (type === 'changePWD') {
+      let {salt, pwd} = saltHashPassword(data.newPWD)
+      res = db.collection('user').doc(data._id).update({
+        data: {
+          salt,
+          pwd
+        }
+      })
+    }
+    return res
+  } else {
+    return Promise.reject('密码错误')
+  }
 }

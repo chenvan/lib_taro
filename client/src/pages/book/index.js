@@ -60,12 +60,12 @@ export default class Index extends Component {
     Taro.hideLoading()
     if (from === 'book') {
       // console.log('data: ', data)
-      let { author, book_type, can_borrow_num, cover, isbn, master, summary, title, total_num } = data
+      let { author, type, can_borrow_num, cover, isbn, master, summary, title, total_num } = data
      
       this.setState({
         status: 'success',
         author,
-        book_type,
+        book_type: type,
         can_borrow_num,
         cover,
         isbn,

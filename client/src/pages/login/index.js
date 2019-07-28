@@ -24,7 +24,7 @@ export default class Index extends Component {
   componentDidHide () { }
 
   checkInput = (data, isChangePWD) => {
-    
+    // console.log(data)
     let transTable = {
           '_id': '工号',
           'pwd': isChangePWD? '旧密码' : '密码',
@@ -64,6 +64,10 @@ export default class Index extends Component {
       })
   }
 
+  // refreshBorrowing = () => {
+  //   Taro.eventCenter.trigger('getBorrowingInfo')
+  // }
+
   submit = async event => {
     let isChangePWD = this.$router.params.isChangePWD
 
@@ -74,13 +78,14 @@ export default class Index extends Component {
       
       this.checkInput(event.detail.value, isChangePWD)
       let { result } = await this.callUserFunc(event.detail.value, isChangePWD)
-      
+      console.log('user info: ', result)
       Taro.hideLoading()
 
       if (isChangePWD) {
-        this.props.user.clearAll()
+        let id = this.props.user._id
+        await this.props.user.clearAll()
         Taro.reLaunch({
-          url: '../index/index'
+          url: `../login/index?_id=${id}&action=redirect`
         })
       } else {
         // console.log('touser: ', res.result.touser)
@@ -93,9 +98,13 @@ export default class Index extends Component {
           'loginDate': new Date()
         })
 
-        Taro.redirectTo({
-          url: '../index/index'
-        })
+        if(this.$router.params.action === 'redirect') {
+          Taro.redirectTo({url: '../index/index'})
+        } else {
+          Taro.navigateBack({
+            delta: 2
+          })
+        }
       }
     } catch (err) {
       Taro.hideLoading()
@@ -103,24 +112,6 @@ export default class Index extends Component {
     }
   }
 
-  loginAsVisitor = async () => {
-    Taro.showLoading({
-      title: '加载中...'
-    })
-
-    await this.props.user.set({
-      '_id': '',
-      'name': '游客',
-      'touser': '',
-      'isVisitor': true,
-      'isAdmin': false,
-      'loginDate': new Date()
-    })
-
-    Taro.redirectTo({
-      url: '../index/index'
-    })
-  }
 
   onError = err => {
     let msg
@@ -160,7 +151,7 @@ export default class Index extends Component {
               name='_id'
               placeholder='工号'
               class='input'
-              value={this.props.user._id || ''}
+              value={this.$router.params._id || ''}
             />
           }
           <Input 
@@ -188,15 +179,6 @@ export default class Index extends Component {
             <Button formType='submit'>
               {isChangePWD ? '修改密码' : '登录'}
             </Button>
-            { 
-              !isChangePWD && (
-                <Button 
-                  onClick={this.loginAsVisitor}
-                >
-                  游客
-                </Button>
-              )
-            }
           </View>
         </Form>
       </View>

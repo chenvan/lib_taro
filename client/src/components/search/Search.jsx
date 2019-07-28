@@ -14,7 +14,7 @@ const searchFieldList = [
   },
   {
     key: '分类',
-    value: 'book_type'
+    value: 'type'
   },
 ]
 
