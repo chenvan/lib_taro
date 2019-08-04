@@ -3,9 +3,10 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 
-import Header from '../../components/header/Header'
-import BorrowingBoard from '../../components/borrowingBoard/BorrowingBoard'
-import CustomButton from '../../components/button/Button'
+import Profile from '../../components/profile/Profile'
+import BorrowingInfo from '../../components/borrowInfo/BorrowInfo'
+import FavInfo from '../../components/favInfo/FavInfo'
+import WButton from '../../components/button/Button'
 
 import keySrc from '../../assert/_ionicons_svg_md-key.svg'
 import logoutSrc from '../../assert/_ionicons_svg_md-log-out.svg'
@@ -28,17 +29,17 @@ export default class Index extends Component {
 
   constructor (props) {
     super(props)
-    this.actionList = this.props.user.isAdmin ? ['逾期名单', '退出登录', '更改密码'] : ['收藏', '搜索', '退出登录', '更改密码'] 
+    this.actionList = this.props.user.isAdmin ? ['逾期名单'] : ['收藏', '搜索'] 
     this.actionIcon = {
       '逾期名单': calendarSrc,
-      '退出登录': logoutSrc,
-      '更改密码': keySrc,
+      // '退出登录': logoutSrc,
+      // '更改密码': keySrc,
       '收藏': heartSrc,
       '搜索': searchSrc,
       '借书扫码': scanSrc,
       '还书扫码': scanSrc
     }
-    this.disabledAction = ['更改密码', '收藏']
+    this.disabledAction = ['收藏']
 
     this.state = {
       loading: true
@@ -47,17 +48,15 @@ export default class Index extends Component {
   }
 
   componentDidMount () { 
-    // let db_env = env.release
+    let using_env = env.release
     if (process.env.NODE_ENV !== 'production') {
-      // db_env = env.test
-      // console.log('not production')
-      
+      using_env = env.test
+      console.log('not production')
     }
-    // console.log('env: ', db_env)
+    // console.log('env: ', using_env)
 
-    // 本地初始化似乎不起作用
     Taro.cloud.init({
-      env: env.test
+      env: using_env
     })
 
     this.init()
@@ -91,8 +90,8 @@ export default class Index extends Component {
       '收藏': this.navigateTo.bind(this, '../fav/index'),
       '搜索': this.navigateTo.bind(this, '../search/index'),
       '逾期名单': this.navigateTo.bind(this, '../outdated/index'),
-      '退出登录': this.logout.bind(this),
-      '更改密码': this.navigateTo.bind(this, '../login/index?isChangePWD=true')
+      // '退出登录': this.logout.bind(this),
+      // '更改密码': this.navigateTo.bind(this, '../login/index?isChangePWD=true')
     }
     return funcList[name]
   }
@@ -153,77 +152,75 @@ export default class Index extends Component {
     console.log(err)
   }
 
-  refresh = () => {
-    Taro.eventCenter.trigger('getBorrowingInfo')
-  }
+  // refresh = () => {
+  //   Taro.eventCenter.trigger('getBorrowingInfo')
+  // }
 
   render () {
+    const {
+      user
+    } = this.props
+
     return this.state.loading ? (
       <View>加载中...</View>
     ) : (
       <View class='root'>
-        <Header 
-          class='header'
-          name={this.props.user.name}
-          isAdmin={this.props.user.isAdmin}
-          isVisitor={this.props.user.isVisitor}
-          _id={this.props.user._id}
-        >
-          {
-            !this.props.user.isAdmin && (
-              <CustomButton
-                class='custom-button'
-                onClick={this.refresh}
-                disabled={this.props.user.isVisitor}
-              >
-                刷新
-              </CustomButton>
-            )
-          }
-        </Header>
+        <Profile 
+          class='profile'
+        />
         {
-          this.props.user.isAdmin ? (
+          user.isAdmin && (
             <View class='scan'>
-              <CustomButton
+              <WButton
                 onClick={this.scan.bind(this, 'borrow')}
                 src={this.actionIcon['借书扫码']}
+                iconSize='36'
               >
                 <Text class='scan-borrow'>借书扫码</Text>
-              </CustomButton>
-              <CustomButton
+              </WButton>
+              <WButton
                 onClick={this.scan.bind(this, 'return')}
                 src={this.actionIcon['还书扫码']}
               >
                 <Text class='scan-return'>还书扫码</Text>
-              </CustomButton>
+              </WButton>
             </View>
-          ) : (
-            <BorrowingBoard
-              class='borrowing-board'
-              uid={this.props.user._id}
-            />
           )
         }
-        <View class='action-zone'>
+        {
+          !user.isAdmin && (
+            <View className='column-list'>
+              <BorrowingInfo
+                uid={user._id}
+              />
+              <FavInfo />
+              <View className='search-board'>
+                search
+              </View>
+            </View>
+          )
+        }
+        {/* <View class='action-zone'>
           {
             this.actionList.map((actionName, index) => {
               return (
-                <CustomButton
+                <WButton
                   key={actionName}
                   onClick={this.actionFunc(actionName)}
                   src={this.actionIcon[actionName]}
                   disabled={this.props.user.isVisitor && this.disabledAction.includes(actionName)}
+                  iconSize='36'
                 >
                   <Text 
                     class={index === 0 ? 'action-name-first' : 'action-name-others'}
                   >
                     {actionName}
                   </Text>
-                </CustomButton>
+                </WButton>
               )
             })
           }
-        </View>
+        </View> */}
       </View>
     )
   }

@@ -1,26 +1,25 @@
-.custom-button-root {
+.w-button-root {
   display: flex;
-  align-items: center;
-
-  .custom-button-icon {
-    margin-right: 24px;
-    opacity: 0.5;
-  }
+  // align-items: center;
 }
 
-.custom-button-disabled {
+.w-button-disabled {
   color: rgba($color: #000000, $alpha: 0.3)
 }
 
-.clear-button-style {
-  background-color: white;
+.w-button-primary {
+  background-color: orange; // can use scss variable func
+}
+
+.clear-default-button-style {
+  background-color: inherit;
   line-height: normal;
   font-size: 28px;
   margin: 0;
   padding: 0;
 }
 
-.clear-button-style::after {
+.clear-default-button-style::after {
   border: none;
 }
 

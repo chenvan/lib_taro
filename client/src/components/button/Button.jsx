@@ -1,11 +1,13 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Form, Button } from '@tarojs/components'
+import { View, Form, Button } from '@tarojs/components'
 
 import classNames from 'classnames'
 
+import WIcon from '../icon/Icon'
+
 import './index.scss'
 
-export default class CustomButton extends Component {
+export default class WButton extends Component {
   static options = {
     addGlobalClass: true
   }
@@ -18,14 +20,23 @@ export default class CustomButton extends Component {
   }
 
   render () {
+    let {
+      primary,
+      isCatchFormId,
+      src,
+      disabled,
+      iconSize,
+    } = this.props
+    
     let btnClass = classNames({
-      'custom-button-root': true,
-      'custom-button': true,
-      'custom-button-disabled': this.props.disabled
+      'w-button-root': true,
+      'w-button': true, // at page can use w-button classname to custom WButton style
+      'w-button-disabled': disabled,
+      'w-button-primary': primary,
     })
     
     return (
-      this.props.isCatchFormId ? (
+      isCatchFormId ? (
         <View
           className={btnClass}
         >
@@ -35,7 +46,7 @@ export default class CustomButton extends Component {
           >
             <Button 
               formType='submit'
-              className='clear-button-style'
+              className='clear-default-button-style'
             >
               {this.props.children}
             </Button>
@@ -47,16 +58,18 @@ export default class CustomButton extends Component {
           onClick={this.onClick}
         >
           { 
-            this.props.src && (
-              <Image
-                class='custom-button-icon'
-                mode='widthFix'
-                src={this.props.src}
-                style={`width: ${this.props.iconWidth || '24px'}`}
+            src && (
+              <WIcon 
+                src={src}
+                iconSize={iconSize}
               />
             )
           }
-          {this.props.children}
+          <Button
+            className='clear-default-button-style'
+          >
+            {this.props.children}
+          </Button>
         </View>
       )
     )

@@ -1,11 +1,13 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View} from '@tarojs/components'
 
-import Thumb from '../thumb/Thumb'
+import BookInfo from '../bookInfo/BookInfo'
+import WButton from '../button/Button'
+import ColumnHeader from '../columnHeader/ColumnHeader'
 
 import './index.scss'
 
-export default class BorrowingBoard extends Component {
+export default class BorrowInfo extends Component {
 
   static options = {
     addGlobalClass: true
@@ -27,15 +29,27 @@ export default class BorrowingBoard extends Component {
     this.init()
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.uid !== this.props.uid) {
+      // 似乎不需要加 id
+      this.getBorrowingInfo()
+    }
+  }
+
   onClick = _id => {
     Taro.navigateTo({
       url: `../../pages/book/index?_id=${_id}`
     })
   }
 
-  init = async () => {
-    await this.getBorrowingInfo()
-    Taro.eventCenter.on('getBorrowingInfo', this.getBorrowingInfo)
+  init = () => {
+    // await this.getBorrowingInfo()
+    this.getBorrowingInfo()
+    // Taro.eventCenter.on('getBorrowingInfo', this.getBorrowingInfo)
+  }
+
+  refreshInfo = () => {
+    this.getBorrowingInfo()
   }
 
   getBorrowingInfo = async () => {
@@ -85,17 +99,20 @@ export default class BorrowingBoard extends Component {
     let { status, title, author, cover, returnDate, bid } = this.state
 
     return (
-      <View class='borrowing-board'>
+      <View class='borrow-info-root borrow-info'>
+        <ColumnHeader title='正在借阅'>
+          <WButton onClick={this.refreshInfo}>刷新</WButton>
+        </ColumnHeader>
         {
           status === 'loading' && (
-            <View class='borrowing-board-loading'>
+            <View class='loading'>
               加载中...
             </View>
           )
         }
         {
           status === 'success' && (
-            <Thumb 
+            <BookInfo 
               cover={cover}
               title={title}
               author={author}

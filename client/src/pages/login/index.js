@@ -78,7 +78,7 @@ export default class Index extends Component {
       
       this.checkInput(event.detail.value, isChangePWD)
       let { result } = await this.callUserFunc(event.detail.value, isChangePWD)
-      console.log('user info: ', result)
+      // console.log('user info: ', result)
       Taro.hideLoading()
 
       if (isChangePWD) {

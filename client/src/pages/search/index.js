@@ -3,7 +3,7 @@ import { View } from '@tarojs/components'
 import './index.scss'
 
 import Search from '../../components/search/Search'
-import Thumb from '../../components/thumb/Thumb'
+import BookInfo from '../../components/bookInfo/BookInfo'
 import ListContainer from '../../components/listContainer/ListContainer'
 
 // const test = [
@@ -115,7 +115,7 @@ export default class Index extends Component {
           {
             this.state.result.map(res => {
               return (
-                <Thumb 
+                <BookInfo 
                   cover={res.cover}
                   title={res.title}
                   author={res.author}

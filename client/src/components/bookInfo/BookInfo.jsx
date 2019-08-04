@@ -1,11 +1,16 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image } from '@tarojs/components'
+import { View } from '@tarojs/components'
 
 import classNames from 'classnames'
 
 import './index.scss'
 
-export default class Thumb extends Component {
+import Cover from '../cover/Cover'
+
+export default class BookInfo extends Component {
+  static options = {
+    addGlobalClass: true
+  }
   
   componentWillMount () { }
 
@@ -34,17 +39,13 @@ export default class Thumb extends Component {
 
     return (
       <View
-        class='thumb-root'
+        class='book-info-root book-info'
         onClick={this.onClick}
       >
-        <View class='cover'>
-          <Image 
-            src={this.props.cover}
-            mode='widthFix'
-            class='cover_img'
-            lazy-load
-          />
-        </View>
+        <Cover 
+          src={this.props.cover}
+          lazyLoad
+        />
         <View class='other'>
           <View class='info'>
             <View class='title'>{this.props.title}</View>

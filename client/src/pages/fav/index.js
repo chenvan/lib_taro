@@ -3,7 +3,7 @@ import { View } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import './index.scss'
 
-import Thumb from '../../components/thumb/Thumb'
+import BookInfo from '../../components/bookInfo/BookInfo'
 import CustomButton from '../../components/button/Button'
 import ListContainer from '../../components/listContainer/ListContainer'
 
@@ -120,7 +120,7 @@ export default class Index extends Component {
             {
               this.state.result.map(res => {
                 return (
-                  <Thumb 
+                  <BookInfo 
                     cover={res.cover}
                     title={res.title}
                     author={res.author}
@@ -134,7 +134,7 @@ export default class Index extends Component {
                     >
                       删除
                     </CustomButton>
-                  </Thumb>
+                  </BookInfo>
                 )
               })
             }

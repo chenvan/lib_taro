@@ -1,0 +1,36 @@
+.profile-root {
+  display: flex;
+
+  .avatar {
+    width: 20%;
+  }
+  
+  .logo {
+    width: 100%;
+  }
+  
+  .user-info {
+    margin-left: 24px;
+
+    .username {
+      font-size: 36px;
+      letter-spacing: 6px;
+    }
+    
+    .id, .tips {
+      font-size: 28px;
+      margin-top: 8px;
+      color: rgba($color: #000000, $alpha: 0.6)
+    }
+  }
+
+  .user-action {
+    // border: 1px solid orange;
+    flex: auto;
+    display: flex;
+    margin-left: 24px;
+    margin-right: 36px;
+    justify-content: flex-end;
+  }
+}
+

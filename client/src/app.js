@@ -44,7 +44,7 @@ class App extends Component {
   }
 
   componentWillUnmount () {
-    Taro.eventCenter.off()
+    // Taro.eventCenter.off()
   }
 
   componentDidShow () {}
