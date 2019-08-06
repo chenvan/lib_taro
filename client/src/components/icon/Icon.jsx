@@ -6,7 +6,10 @@ import { Image } from '@tarojs/components'
 import './index.scss'
 
 export default class WIcon extends Component {
-  
+  static options = {
+    addGlobalClass: true
+  }
+
   render () {
     const {
       src,
@@ -35,16 +38,11 @@ export default class WIcon extends Component {
 
 
     return (
-      // <View
-      //   className={iconClass}
-      //   // style={rootStyle}
-      // >
-        <Image
-          className='w-icon'
-          src={src}
-          style={iconStyle}
-        />
-      // </View>
+      <Image
+        className='w-icon w-icon-root'
+        src={src}
+        style={iconStyle}
+      />
     )
   }
 }

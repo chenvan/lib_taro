@@ -4,7 +4,7 @@ import { View, Image, Canvas, Icon } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import drawQrcode from 'weapp-qrcode'
 
-import CustomButton from '../../components/button/Button'
+import WButton from '../../components/button/Button'
 
 import './index.scss'
 
@@ -182,21 +182,21 @@ export default class Index extends Component {
                 </View>
               </View>
               <View class='action'>
-                <CustomButton 
+                <WButton 
                   class='custom-button' 
                   onClick={this.addToFav}
                   disabled={this.props.user.isVisitor}
                 >
                   收藏
-                </CustomButton>
-                <CustomButton 
+                </WButton>
+                <WButton 
                   class='custom-button' 
                   onClick={this.showQrcode}
                   disabled={this.props.user.isVisitor}
                   isCatchFormId
                 >
                   二维码
-                </CustomButton>
+                </WButton>
               </View>
               <View class='summary'>
                 <View>内容简介</View>

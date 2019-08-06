@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 
 import Cover from '../cover/Cover'
 
@@ -15,16 +15,31 @@ export default class BookThumb extends Component {
   }
 
   render () {
+    const { width, cover, deletable, title } = this.props
+
+    const heightSize = parseInt(width) * 1.8
+    const widthSize = parseInt(width)
+    const fontSize = parseInt(width) / 8
+    const rootStyle = {
+      'min-height': Taro.pxTransform(heightSize),
+      'font-size': Taro.pxTransform(fontSize),
+      'max-width': Taro.pxTransform(widthSize),
+    }
+
     return (
+      
       <View 
         className='book-thumb-root book-thumb'
         onClick={this.onClick}
+        style={rootStyle}
       >
         <Cover
-          src={this.props.cover}
+          src={cover}
+          width={width}
           lazyLoad
         />
-        {this.props.title}
+        {!deletable && <Text>{title}</Text>}
+        {deletable && <Text>good</Text>}
       </View>
     )
   }

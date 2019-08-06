@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, ScrollView } from '@tarojs/components'
+import { View, ScrollView, Switch } from '@tarojs/components'
 // import { observer, inject } from '@tarojs/mobx'
 
 import WButton from '../button/Button'
@@ -18,25 +18,25 @@ export default class FavInfo extends Component {
     super(props)
     this.state = {
       status: 'loading',
+      deletable: false, 
       favList: [],
     }
   }
 
   componentDidMount () { 
-    this.getFavList()
+    this.getFavList(this.props.uid)
   }
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.uid !== this.props.uid) {
       // 似乎不需要加 id
       this.setState({status: 'loading'})
-      this.getFavList()
+      this.getFavList(nextProps.uid)
     }
   }
 
-  getFavList = async () => {
+  getFavList = async uid => {
     try {
-      let { uid } = this.props
       let { result } = await Taro.cloud.callFunction({ name: "fav", data: { type: 'get', data: { uid } } })
       console.log(result)
       this.setState({
@@ -48,15 +48,19 @@ export default class FavInfo extends Component {
     }
   }
 
+  toggleState = event => {
+    let deletable = event.detail.value 
+    this.setState({ deletable })
+  }
 
   onError = err => {
     // Taro.hideLoading()
     console.log(err)
   }
 
-  onClick = _id => {
+  onClick = bid => {
     Taro.navigateTo({
-      url: `../book/index?_id=${_id}`
+      url: `../book/index?_id=${bid}`
     })
   }
 
@@ -94,7 +98,12 @@ export default class FavInfo extends Component {
   render () {
     return (
       <View className='fav-info-root fav-info'>
-        <ColumnHeader title='收藏' />
+        <ColumnHeader title='收藏'>
+          <Switch 
+            color='orange'
+            onChange={this.toggleState}
+          />
+        </ColumnHeader>
         {
           this.state.status === 'loading' && (
             <View>
@@ -117,6 +126,9 @@ export default class FavInfo extends Component {
                         title={favBook.title}
                         onClick={this.onClick.bind(this, favBook.bid)}
                         cover={favBook.cover}
+                        width={200}
+                        deletable={this.state.deletable}
+                        onChange={this.onDelete.bind(this, favBook._id, favBook.title)}
                       />
                     )
                   })

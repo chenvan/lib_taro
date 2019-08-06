@@ -2,17 +2,22 @@
   display: flex;
   flex-direction: column;
 
-  .borrow-info {
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    margin-top: 48px;
+  .borrow-info, .profile, .fav-info, .search-column {
+    // border: 1px solid green;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-bottom: 40px;
+  }
+
+  .column-header {
+    margin-bottom: 8px;
+    .column-title {
+      font-size: 48px;
+      font-weight: 900;
+    }
   }
   
   .profile {
-    padding: 24px 0 16px 36px;
-    background-color: white;
-
     .w-button {
       padding: 18px; // iconSize / 2
       margin-left: 16px;
@@ -22,7 +27,41 @@
 
   .fav-info {
     .book-thumb {
-      margin-left: 36px;
+      margin-right: 24px;
+    }
+  }
+
+
+  .search-column {
+    // margin: 96px 32px 64px;
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  
+    
+    .search-box {
+      background-color: #F4F4F4;
+      display: flex;
+      height: 64px;
+      width: 100%;
+      border-radius: 32px;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      overflow: hidden;
+      flex-grow: 1;
+
+      .w-icon {
+        margin-right: 8px;
+      } 
+    }
+
+    .w-button {
+      width: fit-content;
+      font-size: 28px;
+      padding: 8px;
+      margin-top: 16px;
     }
   }
 }

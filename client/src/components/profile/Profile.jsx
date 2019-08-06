@@ -52,7 +52,6 @@ export default class Profile extends Component {
     Taro.navigateTo({url: '../../pages/login/index?isChangePWD=true'})
   }
 
-  // header & CustomButton style is in index page's index scss
   render () {
     const { user } = this.props
     return (
@@ -79,7 +78,7 @@ export default class Profile extends Component {
           { user._id && <View className='id'>{user._id}</View> }
           { (user._id && user.isVisitor) && <View className='tips'>超期,请重新登录</View> }
         </View>
-        <View className='user-action'>
+        <View className='user-button'>
           { 
             user.isVisitor ? (
               <WButton

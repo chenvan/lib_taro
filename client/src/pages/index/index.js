@@ -7,10 +7,8 @@ import Profile from '../../components/profile/Profile'
 import BorrowingInfo from '../../components/borrowInfo/BorrowInfo'
 import FavInfo from '../../components/favInfo/FavInfo'
 import WButton from '../../components/button/Button'
+import WIcon from '../../components/icon/Icon'
 
-import keySrc from '../../assert/_ionicons_svg_md-key.svg'
-import logoutSrc from '../../assert/_ionicons_svg_md-log-out.svg'
-import heartSrc from '../../assert/_ionicons_svg_md-heart-empty.svg'
 import searchSrc from '../../assert/_ionicons_svg_md-search.svg'
 import scanSrc from '../../assert/_ionicons_svg_md-qr-scanner.svg'
 import calendarSrc from '../../assert/_ionicons_svg_md-calendar.svg'
@@ -34,7 +32,7 @@ export default class Index extends Component {
       '逾期名单': calendarSrc,
       // '退出登录': logoutSrc,
       // '更改密码': keySrc,
-      '收藏': heartSrc,
+      // '收藏': heartSrc,
       '搜索': searchSrc,
       '借书扫码': scanSrc,
       '还书扫码': scanSrc
@@ -152,9 +150,6 @@ export default class Index extends Component {
     console.log(err)
   }
 
-  // refresh = () => {
-  //   Taro.eventCenter.trigger('getBorrowingInfo')
-  // }
 
   render () {
     const {
@@ -194,33 +189,24 @@ export default class Index extends Component {
                 uid={user._id}
               />
               <FavInfo />
-              <View className='search-board'>
-                search
+              <View className='search-column'>
+                <View 
+                  className='search-box'
+                  onClick={() => this.navigateTo('../search/index')}
+                >
+                  <WIcon 
+                    src={searchSrc}
+                    iconSize={32}
+                  />
+                  { ' 书名 | 作者' }
+                </View>
+                <WButton>
+                  搜索类型
+                </WButton>
               </View>
             </View>
           )
         }
-        {/* <View class='action-zone'>
-          {
-            this.actionList.map((actionName, index) => {
-              return (
-                <WButton
-                  key={actionName}
-                  onClick={this.actionFunc(actionName)}
-                  src={this.actionIcon[actionName]}
-                  disabled={this.props.user.isVisitor && this.disabledAction.includes(actionName)}
-                  iconSize='36'
-                >
-                  <Text 
-                    class={index === 0 ? 'action-name-first' : 'action-name-others'}
-                  >
-                    {actionName}
-                  </Text>
-                </WButton>
-              )
-            })
-          }
-        </View> */}
       </View>
     )
   }

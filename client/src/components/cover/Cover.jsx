@@ -8,7 +8,7 @@ export default class Cover extends Component {
     const {
       src,
       lazyLoad,
-      width = 200,
+      width,
     } = this.props
     
     let widthSize = Taro.pxTransform(parseInt(width))

@@ -45,6 +45,7 @@ export default class BookInfo extends Component {
         <Cover 
           src={this.props.cover}
           lazyLoad
+          width={200}
         />
         <View class='other'>
           <View class='info'>

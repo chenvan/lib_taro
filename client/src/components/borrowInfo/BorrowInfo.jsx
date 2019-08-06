@@ -30,9 +30,10 @@ export default class BorrowInfo extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    console.log('borrow info: ', nextProps.uid, this.props.uid )
     if (nextProps.uid !== this.props.uid) {
       // 似乎不需要加 id
-      this.getBorrowingInfo()
+      this.getBorrowingInfo(nextProps.uid)
     }
   }
 
@@ -44,17 +45,17 @@ export default class BorrowInfo extends Component {
 
   init = () => {
     // await this.getBorrowingInfo()
-    this.getBorrowingInfo()
+    this.getBorrowingInfo(this.props.uid)
     // Taro.eventCenter.on('getBorrowingInfo', this.getBorrowingInfo)
   }
 
   refreshInfo = () => {
-    this.getBorrowingInfo()
+    this.getBorrowingInfo(this.props.uid)
   }
 
-  getBorrowingInfo = async () => {
+  getBorrowingInfo = async uid => {
     // console.log(this.props.uid)
-    let uid = this.props.uid
+   
     let info = {}
 
     try {

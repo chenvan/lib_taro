@@ -1,48 +1,39 @@
 .book-info-root {
   display: flex;
-  margin: 16px;
-  padding: 16px;
-  background-color: #FFFFFF;
-  border-radius: 16px;
-
-  .cover {
-    flex: 0 0 30%;
-    display: flex;
-  }
-
-  .cover_img {
-    width: 100%;
-  }
   
   .other {
     padding-left: 24px;
     display: flex;
     flex-direction: column;
+
+    .info {
+      flex: 1;
+
+      .title {
+        font-size: 32px;
+        margin-bottom: 8px;
+      }
+      
+      .author, .book-type, .return-date {
+        font-size: 28px;
+        margin-bottom: 8px;
+      }
+    
+      .return-date-outdated {
+        color: red;
+        font-weight: bolder;
+      }
+    
+      .return-date-now {
+        color: yellow;
+        font-weight: bold;
+      }
+    }
+    
+    
   }
 
-  .info {
-    flex: 1;
-  }
   
-  .title {
-    font-size: 32px;
-    margin-bottom: 8px;
-  }
-  
-  .author, .book-type, .return-date {
-    font-size: 28px;
-    margin-bottom: 8px;
-  }
-
-  .return-date-outdated {
-    color: red;
-    font-weight: bolder;
-  }
-
-  .return-date-now {
-    color: yellow;
-    font-weight: bold;
-  }
 }
 
 
