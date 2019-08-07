@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
+import { View, Text, Icon } from '@tarojs/components'
 
 import Cover from '../cover/Cover'
 
@@ -11,7 +11,8 @@ export default class BookThumb extends Component {
   }
 
   onClick = () => {
-    this.props.onClick && this.props.onClick()
+    
+    this.props.onClick && !this.props.deletable && this.props.onClick()
   }
 
   render () {
@@ -39,7 +40,7 @@ export default class BookThumb extends Component {
           lazyLoad
         />
         {!deletable && <Text>{title}</Text>}
-        {deletable && <Text>good</Text>}
+        {deletable && <View className='del-icon' onClick={this.props.onDelete}><Icon type='clear' size={24} /></View>}
       </View>
     )
   }

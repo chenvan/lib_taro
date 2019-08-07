@@ -8,6 +8,7 @@ import BorrowingInfo from '../../components/borrowInfo/BorrowInfo'
 import FavInfo from '../../components/favInfo/FavInfo'
 import WButton from '../../components/button/Button'
 import WIcon from '../../components/icon/Icon'
+import OperationPanel from '../../components/operationPanel/OperationPanel'
 
 import searchSrc from '../../assert/_ionicons_svg_md-search.svg'
 import scanSrc from '../../assert/_ionicons_svg_md-qr-scanner.svg'
@@ -27,22 +28,26 @@ export default class Index extends Component {
 
   constructor (props) {
     super(props)
-    this.actionList = this.props.user.isAdmin ? ['逾期名单'] : ['收藏', '搜索'] 
-    this.actionIcon = {
-      '逾期名单': calendarSrc,
-      // '退出登录': logoutSrc,
-      // '更改密码': keySrc,
-      // '收藏': heartSrc,
-      '搜索': searchSrc,
-      '借书扫码': scanSrc,
-      '还书扫码': scanSrc
-    }
-    this.disabledAction = ['收藏']
 
     this.state = {
       loading: true
     }
     
+    this.bookOperationList = [
+      {
+        title: '扫码借书',
+        iconSrc: scanSrc, 
+      },
+      {
+        title: '扫码还书',
+        iconSrc: scanSrc,
+      },
+      {
+        title: '逾期名单',
+        iconSrc: calendarSrc,
+      },
+    ]
+
   }
 
   componentDidMount () { 
@@ -165,20 +170,16 @@ export default class Index extends Component {
         />
         {
           user.isAdmin && (
-            <View class='scan'>
-              <WButton
-                onClick={this.scan.bind(this, 'borrow')}
-                src={this.actionIcon['借书扫码']}
-                iconSize='36'
-              >
-                <Text class='scan-borrow'>借书扫码</Text>
-              </WButton>
-              <WButton
-                onClick={this.scan.bind(this, 'return')}
-                src={this.actionIcon['还书扫码']}
-              >
-                <Text class='scan-return'>还书扫码</Text>
-              </WButton>
+            <View className='column-list'>
+              <OperationPanel 
+                title='图书操作面板'
+                opList={this.bookOperationList}
+                isVisitor={user.isVisitor}
+              />
+              <OperationPanel
+                title='活动操作面板'
+                isVisitor={user.isVisitor}
+              />
             </View>
           )
         }
@@ -187,8 +188,12 @@ export default class Index extends Component {
             <View className='column-list'>
               <BorrowingInfo
                 uid={user._id}
+                isVisitor={user.isVisitor}
               />
-              <FavInfo />
+              <FavInfo 
+                uid={user._id}
+                isVisitor={user.isVisitor}
+              />
               <View className='search-column'>
                 <View 
                   className='search-box'
@@ -196,12 +201,12 @@ export default class Index extends Component {
                 >
                   <WIcon 
                     src={searchSrc}
-                    iconSize={32}
+                    iconSize={40}
                   />
                   { ' 书名 | 作者' }
                 </View>
                 <WButton>
-                  搜索类型
+                  或搜索类型
                 </WButton>
               </View>
             </View>

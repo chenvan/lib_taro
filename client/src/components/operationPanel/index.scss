@@ -1,0 +1,27 @@
+.operation-panel-root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .operation-container {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    
+    .operation-item {
+      flex: 0 0 auto;
+      width: 33%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      // justify-content: center;
+      padding: 48px 0;
+      // border: 1px solid green;
+    }
+  }
+}
+
+
+

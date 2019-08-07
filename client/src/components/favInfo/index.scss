@@ -1,8 +1,17 @@
-.fav-list-root {
-  width: 100%;
+.fav-info-root {
+  switch {
+    // transform: scale(0.8) translate(4px);
+    zoom: 0.8;
+  }
+
+  .fav-list-root {
+    width: 100%;
+
+    .fav-list-container {
+      display: flex;
+      width: 100%;
+    }
+  }
 }
 
-.fav-list-container {
-  display: flex;
-  width: 100%;
-}
+

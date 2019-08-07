@@ -1,11 +1,8 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, ScrollView, Switch } from '@tarojs/components'
-// import { observer, inject } from '@tarojs/mobx'
 
-import WButton from '../button/Button'
 import ColumnHeader from '../columnHeader/ColumnHeader'
 import BookThumb from '../bookThumb/BookThumb'
-
 
 import './index.scss'
 
@@ -54,7 +51,6 @@ export default class FavInfo extends Component {
   }
 
   onError = err => {
-    // Taro.hideLoading()
     console.log(err)
   }
 
@@ -64,45 +60,36 @@ export default class FavInfo extends Component {
     })
   }
 
-  onDelete = (_id, title) => {
-  
-    Taro.showModal({
-      title: title,
-      content: '确认删除?'
-    }).then(res => {
-      if (res.confirm) {
-        Taro.showLoading({
-          title: '加载中...'
-        })
-    
-        Taro.cloud.callFunction({
-          name: "fav",
-          data: {
-            type: 'remove',
-            data: {
-              _id
-            }
-          }
-        // eslint-disable-next-line no-shadow
-        }).then(res => {
-          if (res.result.stats.removed === 1) {
-            this.onSuccess(this.state.result.filter(item => item._id !== _id))
-          }
-        }).catch(err => {
-          this.onError(err)
-        })
+  onDelete = async (_id, title) => {
+    try {
+      let { confirm } = await Taro.showModal({ title, content: '确认删除?' })
+      if (confirm) {
+        let { result } = await Taro.cloud.callFunction({ name: 'fav', data: { type: 'remove', data: { _id } } })
+        if (result.stats.removed === 1) {
+          this.setState(preState => ({
+            favList: preState.favList.filter(favBook => favBook._id !== _id)
+          }))
+        }
       }
-    })
+    } catch (err) {
+      this.onError(err)
+    }
   }
 
   render () {
+    const { isVisitor } = this.props
+    
     return (
       <View className='fav-info-root fav-info'>
         <ColumnHeader title='收藏'>
-          <Switch 
-            color='orange'
-            onChange={this.toggleState}
-          />
+          { 
+            !isVisitor && (
+              <Switch 
+                color='orange'
+                onChange={this.toggleState}
+              />
+            )
+          }
         </ColumnHeader>
         {
           this.state.status === 'loading' && (
@@ -128,7 +115,7 @@ export default class FavInfo extends Component {
                         cover={favBook.cover}
                         width={200}
                         deletable={this.state.deletable}
-                        onChange={this.onDelete.bind(this, favBook._id, favBook.title)}
+                        onDelete={this.onDelete.bind(this, favBook._id, favBook.title)}
                       />
                     )
                   })
@@ -137,7 +124,6 @@ export default class FavInfo extends Component {
             </ScrollView>
           )
         }
-        
       </View>
     )
   }
