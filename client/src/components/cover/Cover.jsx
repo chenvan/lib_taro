@@ -4,6 +4,10 @@ import { View, Image } from '@tarojs/components'
 import './index.scss'
 
 export default class Cover extends Component {
+  static options = {
+    addGlobalClass: true
+  }
+
   render () {
     const {
       src,
@@ -11,14 +15,17 @@ export default class Cover extends Component {
       width,
     } = this.props
     
-    let widthSize = Taro.pxTransform(parseInt(width))
-    let rootStyle = {
-      width: widthSize
+    let rootStyle = {}
+    if (width) {
+      let widthSize = Taro.pxTransform(parseInt(width))
+      rootStyle = {
+        width: widthSize
+      }
     }
-
+    
     return (
       <View 
-        className='cover-root'
+        className='cover-root cover'
         style={rootStyle}
       >
         <Image

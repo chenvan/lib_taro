@@ -5,6 +5,8 @@ import BookInfo from '../bookInfo/BookInfo'
 import WButton from '../button/Button'
 import ColumnHeader from '../columnHeader/ColumnHeader'
 
+import refreshSrc from '../../assert/_ionicons_svg_md-refresh.svg'
+
 import './index.scss'
 
 export default class BorrowInfo extends Component {
@@ -29,11 +31,10 @@ export default class BorrowInfo extends Component {
     this.init()
   }
 
-  componentWillReceiveProps (nextProps) {
-    console.log('borrow info: ', nextProps.uid, this.props.uid )
-    if (nextProps.uid !== this.props.uid) {
-      // 似乎不需要加 id
-      this.getBorrowingInfo(nextProps.uid)
+  componentDidUpdate (prevProps) {
+    // console.log('borrow info: ', prevProps.uid, this.props.uid )
+    if (prevProps.uid !== this.props.uid) {
+      this.getBorrowingInfo(this.props.uid)
     }
   }
 
@@ -44,9 +45,7 @@ export default class BorrowInfo extends Component {
   }
 
   init = () => {
-    // await this.getBorrowingInfo()
     this.getBorrowingInfo(this.props.uid)
-    // Taro.eventCenter.on('getBorrowingInfo', this.getBorrowingInfo)
   }
 
   refreshInfo = () => {
@@ -85,7 +84,7 @@ export default class BorrowInfo extends Component {
         info.status = 'fail'
       }
     }
-    console.log('get borrowing:', info)
+    // console.log('get borrowing:', info)
     this.setState({
       status: info.status,
       title: info.title,
@@ -102,7 +101,11 @@ export default class BorrowInfo extends Component {
     return (
       <View class='borrow-info-root borrow-info'>
         <ColumnHeader title='正在借阅'>
-          <WButton onClick={this.refreshInfo}>刷新</WButton>
+          <WButton 
+            onClick={this.refreshInfo}
+            iconSize={48}
+            src={refreshSrc}
+          />
         </ColumnHeader>
         {
           status === 'loading' && (

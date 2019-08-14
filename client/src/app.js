@@ -4,6 +4,7 @@ import '@tarojs/async-await'
 
 import Index from './pages/index'
 import user from './store/user'
+import others from './store/others'
 
 import './app.scss'
 
@@ -14,7 +15,8 @@ import './app.scss'
 // }
 
 const store = {
-  user
+  user,
+  others
 }
 
 class App extends Component {
@@ -25,7 +27,6 @@ class App extends Component {
       'pages/login/index',
       'pages/search/index',
       'pages/book/index',
-      'pages/fav/index',
       'pages/outdated/index'
     ],
     window: {
@@ -44,7 +45,7 @@ class App extends Component {
   }
 
   componentWillUnmount () {
-    // Taro.eventCenter.off()
+    Taro.eventCenter.off()
   }
 
   componentDidShow () {}

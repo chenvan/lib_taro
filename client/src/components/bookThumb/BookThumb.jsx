@@ -1,9 +1,12 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Icon } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 
 import Cover from '../cover/Cover'
+import WButton from '../button/Button'
 
 import './index.scss'
+
+import delSrc  from '../../assert/_ionicons_svg_md-close-circle.svg'
 
 export default class BookThumb extends Component {
   static options = {
@@ -40,7 +43,15 @@ export default class BookThumb extends Component {
           lazyLoad
         />
         {!deletable && <Text>{title}</Text>}
-        {deletable && <View className='del-icon' onClick={this.props.onDelete}><Icon type='clear' size={24} /></View>}
+        {
+          deletable && (
+            <WButton 
+              onClick={this.props.onDelete} 
+              src={delSrc} 
+              iconSize={48}
+            />
+          )
+        }
       </View>
     )
   }

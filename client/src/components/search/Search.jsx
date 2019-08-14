@@ -1,5 +1,11 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Input, Picker, Icon } from '@tarojs/components'
+import { View, Input, Picker } from '@tarojs/components'
+
+import WIcon from '../icon/Icon'
+import WButton from '../button/Button'
+
+import searchSrc from '../../assert/_ionicons_svg_md-search.svg'
+import arrowRightSrc from '../../assert/_ionicons_svg_md-arrow-dropright.svg'
 
 import './index.scss'
 
@@ -12,13 +18,17 @@ const searchFieldList = [
     key: '作者',
     value: 'author'
   },
-  {
-    key: '分类',
-    value: 'type'
-  },
+  // {
+  //   key: '分类',
+  //   value: 'type'
+  // },
 ]
 
-export default class Search extends Component {
+export default class SearchBox extends Component {
+  static options = {
+    addGlobalClass: true
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -26,16 +36,6 @@ export default class Search extends Component {
       searchInfo: '',
     }
   }
-
-  componentWillMount () { }
-
-  componentDidMount () { }
-
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
 
   selectSearchField = event => {
     this.setState({
@@ -55,34 +55,35 @@ export default class Search extends Component {
 
   render () {
     return (
-      <View class='search-root'>
-        <View class='search-box'>
-          <Picker
-            mode='selector'
-            onChange={this.selectSearchField}
-            range={searchFieldList}
-            rangeKey='key'
-            class='search-field-selector'
-          >
-            <View>
-              {this.state.searchField.key}
-            </View>
-          </Picker>
-          <Input 
-            value={this.state.searchInfo}
-            confirmType='search'
-            onInput={this.catchInput}
-            onConfirm={this.search}
-            class='search-input'
-          />
-          <Icon 
-            type='search'
-            size='20'
-            class='search-icon'
-            // color='oragne'
-            onClick={this.search}
-          />
-        </View>
+      <View class='search-box-root search-box'>
+        <WIcon 
+          src={arrowRightSrc}
+          iconSize={48}
+        />
+        <Picker
+          mode='selector'
+          onChange={this.selectSearchField}
+          range={searchFieldList}
+          rangeKey='key'
+          className='picker'
+        >
+          <View>
+            {this.state.searchField.key}
+          </View>
+        </Picker>
+        <View className='sep'></View>
+        <Input 
+          value={this.state.searchInfo}
+          confirmType='search'
+          onInput={this.catchInput}
+          onConfirm={this.search}
+          className='search-input'
+        />
+        <WButton
+          src={searchSrc}
+          iconSize={48}
+          onClick={this.search}
+        />
       </View>
     )
   }

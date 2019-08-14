@@ -1,85 +1,106 @@
 .root {
   display: flex;
   flex-direction: column;
-  background-color: white;
-  min-height: 100vh;
-}
 
-.book-root {
-  padding: 0 16px;
-}
+  .book-root {
+    padding-left: 24px;
+    padding-right: 24px;
+    display: flex;
+    flex-direction: column;
 
-.title {
-  font-size: 48px;
-  letter-spacing: 4px;
-  margin: 8px 0;
-}
+    .title {
+      font-size: 56px;
+      letter-spacing: 8px;
+      font-weight: 900;
+      margin-top: 16px;
+    }
 
-.info {
-  display: flex;
-  margin-bottom: 16px;
-}
+    
+    .info {
+      display: flex;
 
-.cover {
-  flex: 2;
-}
+      .others {
+        padding-left: 24px;
+        font-size: 28px;
+      
+        .child-info {
+          line-height: 1.8em;
+        }
+      }
+    }
 
-.others {
-  padding-left: 16px;
-  flex: 3;
-  font-size: 25px;
+    .btn-zone {
+      display: flex;
+      margin-top: 40px;
 
-  .item {
-    margin-bottom: 8px;
+      .w-button {
+        margin-right: 24px;
+        font-size: 28px;
+        padding: 8px 24px;
+        border: 2px solid orange;
+        border-radius: 16px;
+      }
+    }
+
+    
+    .summary {
+      font-size: 28px;
+      letter-spacing: 4px;
+      margin-top: 40px;
+      line-height: 1.8em;
+    }
+
+  }
+
+
+  .modal-root {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba($color: #000000, $alpha: 0.25);
+
+    .content-root {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+
+      .qrcode-root {
+        padding: 32px;
+        background-color: white;
+        
+        .qrcode {
+          height: 200PX;
+          width: 200PX;
+        } 
+      }
+      
+      .w-button {
+        width: fit-content;
+        margin: 100px auto 0;
+      }
+
+    }
   }
 }
 
-.img {
-   width: 100%;
-}
 
-.action {
-  display: flex;
-  margin-bottom: 16px;
-}
 
-.w-button {
-  margin-right: 16px;
-  font-size: 28px;
-  padding: 8px 16px;
-  border: 2px solid orange;
-  border-radius: 8px;
-}
 
-.summary {
-  font-size: 25px;
-  letter-spacing: 2px;
-  margin-bottom: 16px;
-}
 
-.modal-root {
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba($color: #000000, $alpha: 0.3);
-}
 
-.qrcode-root {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  padding: 80px 80px 20px 80px;
-  background-color: white;
-}
 
-.qrcode {
-  height: 200PX;
-  width: 200PX;
-  margin-bottom: 40px;
-}
 
-.hide-button {
-  margin: auto;
-  width: fit-content;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -32,6 +32,11 @@
   .fav-info {
     .book-thumb {
       margin-right: 24px;
+
+      .w-button {
+        margin: 0 auto;
+        width: fit-content;
+      }
     }
   }
 

@@ -16,23 +16,13 @@ export default class Profile extends Component {
   static options = {
     addGlobalClass: true
   }
-  
-  componentWillMount () { }
-
-  componentDidMount () { 
-
-  }
-
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
 
   toLoginPage = () => {
     let url = '../../pages/login/index'
     url += this.props._id ? `?id=${this.props._id}` : ''
-
+    
+    console.log('url', url)
+    
     Taro.navigateTo({ url })
   }
 

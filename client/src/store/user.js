@@ -8,6 +8,7 @@ class User {
   @observable isAdmin = undefined
   @observable loginDate = undefined
   @observable isVisitor = undefined
+  @observable isFavListChanged = false
 
   @action.bound
   async init () {
@@ -17,11 +18,6 @@ class User {
       let dataList = await Promise.all(
         keys.map(key => Taro.getStorage({ key }))
       )
-
-      // console.log(dataList)
-      // keys.forEach((key, index) => {
-      //   this[key] = dataList[index].data
-      // })
 
       // this.isVisitor = this.isLoginDateOutdated()
       // 为什么要使用 runInAction
@@ -34,14 +30,6 @@ class User {
     } catch (err) {
       // 如果没有登录历史, 则设为visitor
       this.loginAsVisitor()
-      // await this.set({
-      //   '_id': '',
-      //   'name': '游客',
-      //   'touser': '',
-      //   'isVisitor': true,
-      //   'isAdmin': false,
-      //   'loginDate': new Date()
-      // })
       // console.log('user init:', err)
     }
   }
@@ -109,6 +97,11 @@ class User {
       return currentDate - this.loginDate > MAX
     }
     return true
+  }
+
+  @action.bound
+  toggleIsFavListChanged (target) {
+    this.isFavListChanged = target
   }
 }
 

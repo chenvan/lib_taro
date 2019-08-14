@@ -16,9 +16,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      // justify-content: center;
       padding: 48px 0;
-      // border: 1px solid green;
+    }
+
+    .operation-item-disabled {
+      opacity: 0.3;
     }
   }
 }

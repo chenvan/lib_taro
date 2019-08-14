@@ -1,10 +1,13 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import './index.scss'
+import { observer, inject } from '@tarojs/mobx'
 
-import Search from '../../components/search/Search'
+import SearchBox from '../../components/search/Search'
+import TypePicker from '../../components/typePicker/TypePicker'
 import BookInfo from '../../components/bookInfo/BookInfo'
 import ListContainer from '../../components/listContainer/ListContainer'
+
+import './index.scss'
 
 // const test = [
 //   {
@@ -16,6 +19,8 @@ import ListContainer from '../../components/listContainer/ListContainer'
 //   }
 // ]
 
+@inject('others')
+@observer
 export default class Index extends Component {
 
   config = {
@@ -32,17 +37,6 @@ export default class Index extends Component {
       searchInfo: '',
     }
   }
-
-  componentWillMount () { }
-
-  componentDidMount () { }
-
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
-
 
   onError = err => {
     console.log('page', err)
@@ -104,11 +98,24 @@ export default class Index extends Component {
   }
 
   render () {
+    const { method } = this.$router.params
     return (
       <View class='root'>
-        <Search 
-          onSearch={this.onSearch}
-        />
+        { 
+          method === 'search' && (
+            <SearchBox 
+              onSearch={this.onSearch} 
+            />
+          )
+        }
+        { 
+          method === 'type' && (
+            <TypePicker 
+              typeList={this.props.others.typeList}
+              onSearch={this.onSearch}
+            />
+          )
+        }
         <ListContainer
           hasMore={this.state.hasMore}
         >

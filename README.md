@@ -1,6 +1,5 @@
 ## 问题
 1. Header component 重新设计, 把与用户有关的操作都放在这个面板上
-2. book 的类型字段是 type 不是 book_type, 要更改
 3. 导入数据不需要使用 csv, 直接使用json
 4. book page 二维码按钮在游客登录状态不显示灰色
 5. 刷新按钮重新放回 borrowingBoard component 上
@@ -75,3 +74,6 @@ title
 cover
 author
 createTime
+
+### type
+name

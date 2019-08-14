@@ -5,25 +5,15 @@ import './index.scss'
 
 export default class ListContainer extends Component {
 
-  componentWillMount () { }
-
-  componentDidMount () { }
-
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
-
   render () {
     return (
       <View 
-        className='list-container'
+        className='list-container-root'
       >
         {this.props.children}
         {
           this.props.hasMore === false && (
-            <View class='footer'>
+            <View className='footer'>
               NO MORE
             </View>
           )

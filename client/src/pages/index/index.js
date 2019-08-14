@@ -1,6 +1,5 @@
-/* eslint-disable taro/props-reserve-keyword */
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 
 import Profile from '../../components/profile/Profile'
@@ -18,7 +17,7 @@ import './index.scss'
 
 import env from '../../setting.js'
 
-@inject('user')
+@inject('user', 'others')
 @observer
 export default class Index extends Component {
 
@@ -37,39 +36,44 @@ export default class Index extends Component {
       {
         title: '扫码借书',
         iconSrc: scanSrc, 
+        func: this.scan.bind(this, 'borrow'),
       },
       {
         title: '扫码还书',
         iconSrc: scanSrc,
+        func: this.scan.bind(this, 'return'),
       },
       {
         title: '逾期名单',
         iconSrc: calendarSrc,
+        func: this.navigateTo.bind(this, '../outdated/index'),
       },
     ]
 
   }
 
   componentDidMount () { 
-    let using_env = env.release
-    if (process.env.NODE_ENV !== 'production') {
-      using_env = env.test
-      console.log('not production')
-    }
-    // console.log('env: ', using_env)
+    Taro.showLoading({title: '加载中...'})
 
     Taro.cloud.init({
-      env: using_env
+      env: process.env.NODE_ENV !== 'production' ? env.test : env.release
     })
 
     this.init()
+
+    if (process.env.NODE_ENV !== 'production') {
+      // for debug
+      // Taro.navigateTo({url: '../search/index?method=type'})
+    }
   }
 
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
+  componentDidShow () {
+    if (this.props.user.isFavListChanged) {
+      // make favinfo component getFavList again
+      Taro.eventCenter.trigger('get-fav-list')
+      this.props.user.toggleIsFavListChanged(false)
+    }
+  }
 
   navigateTo = url => {
     Taro.navigateTo({
@@ -82,33 +86,23 @@ export default class Index extends Component {
       // if already login, no need to init 
       await this.props.user.init()
     }
+
+    await this.props.others.initTypeList(this.getTypeList)
     
     this.setState({
       loading: false
     })
+
+    Taro.hideLoading()
   }
 
-  actionFunc = name => {
-    let funcList = {
-      '收藏': this.navigateTo.bind(this, '../fav/index'),
-      '搜索': this.navigateTo.bind(this, '../search/index'),
-      '逾期名单': this.navigateTo.bind(this, '../outdated/index'),
-      // '退出登录': this.logout.bind(this),
-      // '更改密码': this.navigateTo.bind(this, '../login/index?isChangePWD=true')
-    }
-    return funcList[name]
-  }
-
-  logout = async () => {
-    let { confirm } = await Taro.showModal({
-      title: '提示',
-      content: '确认退出?'
+  getTypeList = async () => {
+    let { result } = await Taro.cloud.callFunction({
+      name: 'type',
+      data: { type: 'get' }
     })
 
-    if (confirm) {
-      await this.props.user.clearAll()
-      Taro.redirectTo({url: '../login/index?action=redirect'})
-    }
+    return result.data.map(item => item.name)
   }
 
 
@@ -155,18 +149,15 @@ export default class Index extends Component {
     console.log(err)
   }
 
-
   render () {
     const {
       user
     } = this.props
 
-    return this.state.loading ? (
-      <View>加载中...</View>
-    ) : (
+    return !this.state.loading && ( 
       <View class='root'>
         <Profile 
-          class='profile'
+          className='profile'
         />
         {
           user.isAdmin && (
@@ -197,7 +188,7 @@ export default class Index extends Component {
               <View className='search-column'>
                 <View 
                   className='search-box'
-                  onClick={() => this.navigateTo('../search/index')}
+                  onClick={this.navigateTo.bind(this, '../search/index?method=search')}
                 >
                   <WIcon 
                     src={searchSrc}
@@ -205,7 +196,9 @@ export default class Index extends Component {
                   />
                   { ' 书名 | 作者' }
                 </View>
-                <WButton>
+                <WButton
+                  onClick={this.navigateTo.bind(this, '../search/index?method=type')}
+                >
                   或搜索类型
                 </WButton>
               </View>

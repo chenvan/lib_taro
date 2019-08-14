@@ -3,7 +3,7 @@ import { View, Text, Button } from '@tarojs/components'
 
 import './index.scss'
 
-export default class ErrorBoard extends Component {
+export default class PlaceHolder extends Component {
 
   componentWillMount () { }
 

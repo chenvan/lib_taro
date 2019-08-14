@@ -3,6 +3,7 @@ import { View, Form, Input, Button, Image } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 
 import logoSrc from '../../assert/logo.png'
+
 import './index.scss'
 
 @inject('user')
@@ -64,10 +65,6 @@ export default class Index extends Component {
       })
   }
 
-  // refreshBorrowing = () => {
-  //   Taro.eventCenter.trigger('getBorrowingInfo')
-  // }
-
   submit = async event => {
     let isChangePWD = this.$router.params.isChangePWD
 
@@ -99,8 +96,10 @@ export default class Index extends Component {
         })
 
         if(this.$router.params.action === 'redirect') {
+          // change password & logout
           Taro.redirectTo({url: '../index/index'})
         } else {
+          // relogin
           Taro.navigateBack({
             delta: 2
           })
@@ -124,7 +123,6 @@ export default class Index extends Component {
         msg = err.message || '出错'
       }
     }
-    // console.log(err.message)
 
     Taro.showModal({
       title: '错误提示',
@@ -175,11 +173,10 @@ export default class Index extends Component {
               </View>
             )
           }
-          <View class='button-zone'>
-            <Button formType='submit'>
+
+            <Button formType='submit' className='clear-default-button-style btn'>
               {isChangePWD ? '修改密码' : '登录'}
             </Button>
-          </View>
         </Form>
       </View>
     )

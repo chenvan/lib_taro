@@ -1,0 +1,22 @@
+.type-picker-root {
+  .type-list-root {
+    width: 100%;
+
+    .type-list-container {
+      display: flex;
+      width: 100%;
+
+      .type-item {
+        min-width: fit-content;
+        // border: 1px solid green;
+        padding: 8px 16px;
+        margin: 8px 16px;
+      
+      }
+
+      .type-item-selected {
+        background-color: orange
+      }
+    }
+  }
+}

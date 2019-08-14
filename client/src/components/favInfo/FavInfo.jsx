@@ -22,17 +22,19 @@ export default class FavInfo extends Component {
 
   componentDidMount () { 
     this.getFavList(this.props.uid)
+    Taro.eventCenter.on('get-fav-list', this.getFavList.bind(this, this.props.uid))
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.uid !== this.props.uid) {
-      // 似乎不需要加 id
-      this.setState({status: 'loading'})
-      this.getFavList(nextProps.uid)
+  componentDidUpdate (prevProps) {
+    if (prevProps.uid !== this.props.uid) {
+      this.getFavList(this.props.uid)
     }
   }
 
+
+
   getFavList = async uid => {
+    // console.log(uid)
     try {
       let { result } = await Taro.cloud.callFunction({ name: "fav", data: { type: 'get', data: { uid } } })
       console.log(result)

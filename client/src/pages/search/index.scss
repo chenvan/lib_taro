@@ -1,10 +1,21 @@
 .root {
   display: flex;
   flex-direction: column;
-}
+  padding: 0 16px;
 
-.footer {
-  margin: 16px auto;
-  font-size: 24px;
-  letter-spacing: 4px;
+  .search-box {
+    margin-bottom: 32px;
+
+    .w-button {
+      padding: 0 8px;
+    }
+  }
+
+  .type-picker {
+    margin-bottom: 32px;
+  }
+
+  .book-info {
+    margin-bottom: 32px;
+  }
 }

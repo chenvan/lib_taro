@@ -1,11 +1,12 @@
-/* eslint-disable taro/props-reserve-keyword */
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Canvas, Icon } from '@tarojs/components'
+import { View, Canvas, Icon } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import drawQrcode from 'weapp-qrcode'
 
 import WButton from '../../components/button/Button'
+import Cover from '../../components/cover/Cover'
 
+import closeSrc from '../../assert/_ionicons_svg_md-close-circle.svg'
 import './index.scss'
 
 @inject('user')
@@ -21,7 +22,7 @@ export default class Index extends Component {
     this.state = {
       status: 'loading',
       author: '',
-      book_type: '',
+      type: '',
       can_borrow_num: 0,
       cover: '',
       isbn: '',
@@ -32,8 +33,6 @@ export default class Index extends Component {
       showState: 'none',
     }
   }
-
-  componentWillMount () { }
 
   componentDidMount () {
     this.init()
@@ -59,13 +58,14 @@ export default class Index extends Component {
   onSuccess = (from, data) => {
     Taro.hideLoading()
     if (from === 'book') {
-      // console.log('data: ', data)
+      console.log('data: ', data)
       let { author, type, can_borrow_num, cover, isbn, master, summary, title, total_num } = data
+
      
       this.setState({
         status: 'success',
         author,
-        book_type: type,
+        type,
         can_borrow_num,
         cover,
         isbn,
@@ -76,6 +76,7 @@ export default class Index extends Component {
       })
 
     } else if (from === 'fav') {
+      this.props.user.toggleIsFavListChanged(true)
       Taro.showToast({ title: '收藏成功' })
     }
   }
@@ -156,66 +157,73 @@ export default class Index extends Component {
   }
 
   render () {
+    const {
+      user
+    } = this.props
+
+
     return (
       this.state.status !== 'loading' && (
         this.state.status === 'success' ? (
-          <View class='root'>
-            <View class='book-root'>
-              <View class='title'>
+          <View className='root'>
+            <View className='book-root'>
+              <View className='title'>
                 {this.state.title}
               </View>
-              <View class='info'>
-                <View class='cover'>
-                  <Image 
-                    src={this.state.cover}
-                    mode='widthFix'
-                    class='img'
-                  />
-                </View>
-                <View class='others'>
-                  <View class='item'>{'作者: ' + this.state.author}</View>
-                  {this.state.master !== '' && <View class='item'>{'书主: ' + this.state.master}</View>}
-                  <View class='item'>{'类型: ' + this.state.book_type}</View>
-                  <View class='item'>{'ISBN: ' + this.state.isbn}</View>
-                  <View class='item'>{'总数: ' + this.state.total_num}</View>
-                  <View class='item'>{'可借: ' + this.state.can_borrow_num}</View>
+              <View className='info'>
+                <Cover 
+                  src={this.state.cover}
+                  width={250}
+                />
+                <View className='others'>
+                  <View className='child-info'>{'作者: ' + this.state.author}</View>
+                  {this.state.master !== '' && <View className='child-info'>{'书主: ' + this.state.master}</View>}
+                  <View className='child-info'>{'类型: ' + this.state.type}</View>
+                  <View className='child-info'>{'ISBN: ' + this.state.isbn}</View>
+                  <View className='child-info'>{'总数: ' + this.state.total_num}</View>
+                  <View className='child-info'>{'可借: ' + this.state.can_borrow_num}</View>
                 </View>
               </View>
-              <View class='action'>
+              <View className='btn-zone'>
                 <WButton 
-                  class='custom-button' 
                   onClick={this.addToFav}
-                  disabled={this.props.user.isVisitor}
+                  disabled={user.isVisitor}
                 >
                   收藏
                 </WButton>
                 <WButton 
-                  class='custom-button' 
                   onClick={this.showQrcode}
-                  disabled={this.props.user.isVisitor}
+                  disabled={user.isVisitor}
                   isCatchFormId
                 >
                   二维码
                 </WButton>
               </View>
-              <View class='summary'>
+              <View className='summary'>
                 <View>内容简介</View>
                 <View>{this.state.summary}</View>
               </View>
             </View>
             <View 
-              class='modal-root'
+              className='modal-root'
               style={`display: ${this.state.showState}`} 
             >
-              <View class='qrcode-root'>
-                <Canvas class='qrcode' canvasId='qrcode' />
-                <View class='hide-button'>
+              <View className='content-root'>
+                <View className='qrcode-root'>
+                  <Canvas className='qrcode' canvasId='qrcode' />
+                </View>
+                <WButton
+                  onClick={this.hideQrcode}
+                  src={closeSrc}
+                  iconSize={80}
+                />
+                {/* <View className='hide-button'>
                   <Icon 
                     onClick={this.hideQrcode} 
                     type='clear'
                     size='36'
                   />
-                </View>
+                </View> */}
               </View>
             </View>
           </View>

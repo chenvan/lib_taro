@@ -3,12 +3,11 @@
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  background-color: white;
 
   .logo {
+    width: 25%;
+    display: flex;
     margin: 64px 0;
-    width: 160px;
-    height: 160px;
 
     .logo-img {
       width: 100%;
@@ -20,19 +19,30 @@
   }
 
   Input {
+    font-size: 32px;
     margin-bottom: 40px;
     padding-bottom: 16px;
     border-bottom: 2px solid rgba($color: #000000, $alpha: 0.5);
   }
 
-  .button-zone {
-    margin-top: 80px;
+  .clear-default-button-style {
+    background-color: inherit;
+    line-height: normal;
+    font-size: inherit;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .clear-default-button-style::after {
+    border: none;
   }
 
-  Button {
-    margin-bottom: 32px;
-    font-size: 36px;
-    line-height: 2;
+  .btn {
+    margin-top: 80px;
+    background-color: orange;
+    padding: 16px 0;
+    font-size: 32px;
+    border-radius: 64px;
   }
 
 }

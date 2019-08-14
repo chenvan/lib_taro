@@ -1,33 +1,23 @@
-.search-root {
-  background-color: #FFFFFF;
-  padding: 16px 0 32px;
-  
-  .search-box {
-    background-color: #F4F4F4;
-    display: flex;
+.search-box-root {
+  background-color: #dddddd;
+  display: flex;
+  align-items: center;
+  border-radius: 36px;
+  font-size: 36px;
+  line-height: 1.8em;
+  overflow: hidden;
+
+  .sep {
+    width: 2px;
+    height: 64px;
+    float: left;
+    background-color: #ffffff;
     margin: 0 16px;
-    // padding: 8px;
-    border-radius: 32px;
-    align-items: flex-end;
-    font-size: 36px;
-    overflow: hidden;
-
-    .search-field-selector {
-      padding: 8px 16px;
-      // background-color: orange;
-    }
-
-    .search-input {
-      flex: 1;
-      padding: 8px 16px;
-    }
-
-    .search-icon {
-      padding: 12px 16px;
-    }
-    
   }
 
+  .search-input {
+    flex: 1;
+  }
 }
 
 
