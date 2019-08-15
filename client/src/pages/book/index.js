@@ -5,8 +5,11 @@ import drawQrcode from 'weapp-qrcode'
 
 import WButton from '../../components/button/Button'
 import Cover from '../../components/cover/Cover'
+import PlaceHolder from '../../components/placeHolder/PlaceHolder'
 
 import closeSrc from '../../assert/_ionicons_svg_md-close-circle.svg'
+import errorSrc from '../../assert/error.svg'
+
 import './index.scss'
 
 @inject('user')
@@ -217,20 +220,13 @@ export default class Index extends Component {
                   src={closeSrc}
                   iconSize={80}
                 />
-                {/* <View className='hide-button'>
-                  <Icon 
-                    onClick={this.hideQrcode} 
-                    type='clear'
-                    size='36'
-                  />
-                </View> */}
               </View>
             </View>
           </View>
         ) : (
-          <View>
-            Error
-          </View>
+          <PlaceHolder 
+            src={errorSrc}
+          />
         )
       )
     )

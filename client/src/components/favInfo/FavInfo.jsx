@@ -3,6 +3,10 @@ import { View, ScrollView, Switch } from '@tarojs/components'
 
 import ColumnHeader from '../columnHeader/ColumnHeader'
 import BookThumb from '../bookThumb/BookThumb'
+import WLoading from '../loading/Loading'
+import PlaceHolder from '../placeHolder/PlaceHolder'
+
+import emptySrc from '../../assert/empty.svg'
 
 import './index.scss'
 
@@ -34,10 +38,9 @@ export default class FavInfo extends Component {
 
 
   getFavList = async uid => {
-    // console.log(uid)
     try {
       let { result } = await Taro.cloud.callFunction({ name: "fav", data: { type: 'get', data: { uid } } })
-      console.log(result)
+      // console.log(result)
       this.setState({
         status: 'success',
         favList: result.data
@@ -95,77 +98,47 @@ export default class FavInfo extends Component {
         </ColumnHeader>
         {
           this.state.status === 'loading' && (
-            <View>
-              loading
+            <View className='loading'>
+              <WLoading 
+                loadingSize={64}
+                color='orange'
+              />
             </View>
           )
         }
         {
           this.state.status === 'success' && (
-            <ScrollView
-              scrollX
-              className='fav-list-root'
-            >
-              <View className='fav-list-container'> 
-                { 
-                  this.state.favList.map(favBook => {
-                    return (
-                      <BookThumb 
-                        key={favBook._id}
-                        title={favBook.title}
-                        onClick={this.onClick.bind(this, favBook.bid)}
-                        cover={favBook.cover}
-                        width={200}
-                        deletable={this.state.deletable}
-                        onDelete={this.onDelete.bind(this, favBook._id, favBook.title)}
-                      />
-                    )
-                  })
-                }
-              </View>
-            </ScrollView>
+            this.state.favList.length === 0 ? (
+              <PlaceHolder 
+                src={emptySrc}
+              />
+            ) : (
+              <ScrollView
+                scrollX
+                className='fav-list-root'
+              >
+                <View className='fav-list-container'> 
+                  { 
+                    this.state.favList.map(favBook => {
+                      return (
+                        <BookThumb 
+                          key={favBook._id}
+                          title={favBook.title}
+                          onClick={this.onClick.bind(this, favBook.bid)}
+                          cover={favBook.cover}
+                          width={200}
+                          deletable={this.state.deletable}
+                          onDelete={this.onDelete.bind(this, favBook._id, favBook.title)}
+                        />
+                      )
+                    })
+                  }
+                </View>
+              </ScrollView>
+            )
           )
         }
       </View>
     )
   }
 }
-
-
-  
-
-  // render () {
-  //   return (
-  //     this.state.status !== 'loading' && (
-  //       this.state.status === 'success' ? (
-  //         <ListContainer>
-  //           {
-  //             this.state.result.map(res => {
-  //               return (
-  //                 <BookInfo 
-  //                   cover={res.cover}
-  //                   title={res.title}
-  //                   author={res.author}
-  //                   bookType={res.book_type}
-  //                   key={res._id}
-  //                   onClick={this.onClick.bind(this, res.bid)}
-  //                 >
-  //                   <CustomButton
-  //                     className='custom-button'
-  //                     onClick={this.onDelete.bind(this, res._id, res.title)}
-  //                   >
-  //                     删除
-  //                   </CustomButton>
-  //                 </BookInfo>
-  //               )
-  //             })
-  //           }
-  //         </ListContainer>
-  //       ) : (
-  //         <View>
-  //           Error
-  //         </View>
-  //       )
-  //     )
-  //   )
-  // }

@@ -19,9 +19,7 @@ export default class Profile extends Component {
 
   toLoginPage = () => {
     let url = '../../pages/login/index'
-    url += this.props._id ? `?id=${this.props._id}` : ''
-    
-    console.log('url', url)
+    url += this.props.user._id ? `?_id=${this.props.user._id}` : ''
     
     Taro.navigateTo({ url })
   }

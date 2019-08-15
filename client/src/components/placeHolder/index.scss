@@ -1,0 +1,12 @@
+.placeholder-root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .img {
+    display: flex;
+    width: 25%;
+  }
+}

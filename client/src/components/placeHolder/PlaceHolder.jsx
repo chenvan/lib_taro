@@ -1,34 +1,27 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Button } from '@tarojs/components'
+import { View, Image } from '@tarojs/components'
 
 import './index.scss'
 
 export default class PlaceHolder extends Component {
-
-  componentWillMount () { }
-
-  componentDidMount () { }
-
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
-
-  onClick = () => {
-    this.props.onClick && this.props.onClick()
+  static options = {
+    addGlobalClass: true
   }
 
+
   render () {
+    // const {
+    //   minHeight = 100,
+    // } = this.props
+
     return (
-      <View>
-        <Text>有错误发生</Text>
-        {
-          this.props.onClick && (
-            <Button onClick={this.onClick}>
-              重试
-            </Button>
-          )}
+      <View className='placeholder-root placeholder'>
+        <Image
+          className='img'
+          src={this.props.src}
+          mode='widthFix' 
+        />
+        {this.props.children}
       </View>
     )
   }

@@ -4,8 +4,12 @@ import { View} from '@tarojs/components'
 import BookInfo from '../bookInfo/BookInfo'
 import WButton from '../button/Button'
 import ColumnHeader from '../columnHeader/ColumnHeader'
+import WLoading from '../loading/Loading'
+import PlaceHolder from '../placeHolder/PlaceHolder'
 
 import refreshSrc from '../../assert/_ionicons_svg_md-refresh.svg'
+import emptySrc  from '../../assert/empty.svg'
+import errorSrc from '../../assert/error.svg'
 
 import './index.scss'
 
@@ -109,9 +113,16 @@ export default class BorrowInfo extends Component {
         </ColumnHeader>
         {
           status === 'loading' && (
-            <View class='loading'>
-              加载中...
+            // <View class='loading'>
+            //   加载中...
+            // </View>
+            <View className='loading'>
+              <WLoading 
+                loadingSize={64}
+                color='orange'
+              />
             </View>
+            
           )
         }
         {
@@ -127,14 +138,16 @@ export default class BorrowInfo extends Component {
         }
         {
           status === 'no-borrowing' && (
-            <View class='no-borrowing'>
-              还没借书, 赶紧去借吧
-            </View>
+            <PlaceHolder 
+              src={emptySrc}
+            />
           ) 
         }
         {
           status === 'fail' && (
-            <View>Error</View>
+            <PlaceHolder 
+              src={errorSrc}
+            />
           )
         }
       </View>
