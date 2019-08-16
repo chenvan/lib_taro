@@ -1,22 +1,24 @@
 <img alt='logo' src='https://user-images.githubusercontent.com/7885757/63141030-bd583980-c016-11e9-8d30-4f42de853589.png' width='75px'/>
 
-##介绍
+<img alt='scan code' src='https://user-images.githubusercontent.com/7885757/63141766-7f104980-c019-11e9-910d-7f7bc383f3b7.jpg' width='150px'/>
+
+## 介绍
 对图书借阅情况进行记录
 
 ### 功能
-1. 读者
+#### 读者
 三种方式搜索图书(书名, 作者名, 书的类别)
 收藏图书
 正在借阅图书的情况
 
-2. 管理员
+#### 管理员
 扫码借书还书
 查看逾期名单
 
-3. 都有的功能
+#### 都有的功能
 修改密码
 
-##版本
+## 版本
 ### 3.0
 [点击链接可看截图](https://github.com/chenvan/lib_taro/issues/1)
 
@@ -29,10 +31,10 @@
 
 ## 思路整理
 ### 登录和权限
-1. 权限: 
+#### 权限: 
 管理员, 用户, 游客(1:真游客, 2:用户或管理员登录时间太长导致降权,需要重新登录)
 
-2. 登录逻辑:
+#### 登录逻辑:
 真游客 -> home page => navigate to login page -> 用户或管理员 -> navigateback 2 delta
 
 降权游客(需重新登录的用户或管理员) -> home page => navigate to login page(带上id) -> 重新登录 或 登录为其他 -> navigateback 2 delta
@@ -43,7 +45,7 @@
 
 用户, 管理员 -> home page => to login page for password change -> relaunch to login page(带上id, 带上redirect指示) -> 重新登录 或 登录为其他 -> redirect to index
 
-3. 游客判断
+#### 游客判断
 loginAsVisitor -> 直接设置 isVisitor = ture
 
 init时检查登录时间超过规定 -> 游客
